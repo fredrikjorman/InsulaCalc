@@ -1,5 +1,6 @@
 ﻿@page "/calculator"
 @rendermode InteractiveServer
+@using InsulaCalc.Services
 
 <PageTitle>Insulation Calculator</PageTitle>
 
@@ -44,6 +45,7 @@
     private int fullPackages;
     private int loosePipeSections;
     private int sectionsPerPackage = 3;
+    private PipeInsulationCalculator calculator = new();
 
     private string errorMessage = "";
     private bool hasResult = false;
@@ -64,11 +66,11 @@
             return;
         }
 
-        requiredPipeSections = (int)Math.Ceiling(requiredLength / 1.2m);
+        requiredPipeSections = calculator.CalculateRequiredSections(requiredLength);
 
-        fullPackages = requiredPipeSections / sectionsPerPackage;
+        fullPackages = calculator.CalculateFullPackages(requiredPipeSections, sectionsPerPackage);
 
-        loosePipeSections = requiredPipeSections % sectionsPerPackage;
+        loosePipeSections = calculator.CalculateLooseSections(requiredPipeSections, sectionsPerPackage);
 
         hasResult = true;
     }
