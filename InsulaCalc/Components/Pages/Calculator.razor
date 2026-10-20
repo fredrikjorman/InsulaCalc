@@ -18,6 +18,10 @@
 <input type="number" id="requiredLength" @bind="requiredLength" />
 <p>Selected required length: @requiredLength m</p>
 
+<label for="sectionsPerPackage">Pipe sections per package</label>
+<input type="number" id="sectionsPerPackage" @bind="sectionsPerPackage" />
+
+
 
 @code {
     private int diameter;
@@ -26,14 +30,20 @@
     private int requiredPipeSections;
     private int fullPackages;
     private int loosePipeSections;
+    private int sectionsPerPackage = 3;
 
     private void CalculatePipeSections()
     {
+        if (sectionsPerPackage <= 0 || requiredLength <= 0)
+        {
+            return;
+        }
+
         requiredPipeSections = (int)Math.Ceiling(requiredLength / 1.2m);
 
-        fullPackages = requiredPipeSections / 3;
+        fullPackages = requiredPipeSections / sectionsPerPackage;
 
-        loosePipeSections = requiredPipeSections % 3;
+        loosePipeSections = requiredPipeSections % sectionsPerPackage;
     }
 
 }
