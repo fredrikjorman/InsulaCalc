@@ -4,3 +4,22 @@
 <PageTitle>Insulation Calculator</PageTitle>
 <h1>Insulation Calculator</h1>
 <p>Calculate the amount of insulation needed for your project.</p>
+
+<label for="diameter">Pipe diameter (mm)</label>
+<input type="number" id="diameter" @bind="diameter" />
+<p>Selected diameter: @diameter mm</p>
+
+<label for="insulationThickness">Insulation thickness (mm)</label>
+<input type="number" id="insulationThickness" @bind="insulationThickness" />
+<p>Selected insulation thickness: @insulationThickness mm</p>
+
+<label for="requiredLength">Required length (m)</label>
+<input type="number" id="requiredLength" @bind="requiredLength" />
+<p>Selected required length: @requiredLength m</p>
+
+
+@code {
+    private int diameter;
+    private int insulationThickness;
+    private decimal requiredLength;
+}
