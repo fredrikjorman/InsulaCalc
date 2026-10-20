@@ -1,4 +1,5 @@
 ﻿@page "/calculator"
+@rendermode InteractiveServer
 
 
 <PageTitle>Insulation Calculator</PageTitle>
@@ -22,4 +23,14 @@
     private int diameter;
     private int insulationThickness;
     private decimal requiredLength;
+    private int requiredPipeSections;
+
+    private void CalculatePipeSections()
+    {
+        requiredPipeSections = (int)Math.Ceiling(requiredLength / 1.2m);
+    }
+
 }
+
+<button @onclick="CalculatePipeSections">Calculate</button>
+<p>Required pipe sections: @requiredPipeSections pcs</p>
