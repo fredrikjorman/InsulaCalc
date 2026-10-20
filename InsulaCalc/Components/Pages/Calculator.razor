@@ -1,8 +1,8 @@
 ﻿@page "/calculator"
 @rendermode InteractiveServer
 
-
 <PageTitle>Insulation Calculator</PageTitle>
+
 <h1>Insulation Calculator</h1>
 <p>Calculate the amount of insulation needed for your project.</p>
 
@@ -21,21 +21,46 @@
 <label for="sectionsPerPackage">Pipe sections per package</label>
 <input type="number" id="sectionsPerPackage" @bind="sectionsPerPackage" />
 
+<button @onclick="CalculatePipeSections">Calculate</button>
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">@errorMessage</p>
+}
+
+@if (hasResult)
+{
+    <p>Required pipe sections: @requiredPipeSections pcs</p>
+    <p>Full packages: @fullPackages</p>
+    <p>Loose pipe sections: @loosePipeSections</p>
+}
 
 @code {
     private int diameter;
     private int insulationThickness;
     private decimal requiredLength;
+
     private int requiredPipeSections;
     private int fullPackages;
     private int loosePipeSections;
     private int sectionsPerPackage = 3;
 
+    private string errorMessage = "";
+    private bool hasResult = false;
+
     private void CalculatePipeSections()
     {
+        errorMessage = "";
+        hasResult = false;
+
         if (sectionsPerPackage <= 0 || requiredLength <= 0)
         {
+            errorMessage = "Please enter a valid package size and length.";
+
+            requiredPipeSections = 0;
+            fullPackages = 0;
+            loosePipeSections = 0;
+
             return;
         }
 
@@ -44,11 +69,7 @@
         fullPackages = requiredPipeSections / sectionsPerPackage;
 
         loosePipeSections = requiredPipeSections % sectionsPerPackage;
+
+        hasResult = true;
     }
-
 }
-
-<button @onclick="CalculatePipeSections">Calculate</button>
-<p>Required pipe sections: @requiredPipeSections pcs</p>
-<p>Full packages: @fullPackages</p>
-<p>Loose pipe sections: @loosePipeSections</p>
