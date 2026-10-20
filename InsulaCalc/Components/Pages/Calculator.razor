@@ -24,13 +24,21 @@
     private int insulationThickness;
     private decimal requiredLength;
     private int requiredPipeSections;
+    private int fullPackages;
+    private int loosePipeSections;
 
     private void CalculatePipeSections()
     {
         requiredPipeSections = (int)Math.Ceiling(requiredLength / 1.2m);
+
+        fullPackages = requiredPipeSections / 3;
+
+        loosePipeSections = requiredPipeSections % 3;
     }
 
 }
 
 <button @onclick="CalculatePipeSections">Calculate</button>
 <p>Required pipe sections: @requiredPipeSections pcs</p>
+<p>Full packages: @fullPackages</p>
+<p>Loose pipe sections: @loosePipeSections</p>
