@@ -1,9 +1,20 @@
 
+/* ========================================
+   HERO SECTION
+======================================== */
+
 .hero-section {
     background: linear-gradient(135deg, #f8fbff, #eef4ff);
     border-radius: 20px;
-    padding: 40px;
-    margin-bottom: 30px;
+    padding: 60px 35px;
+    margin-bottom: 40px;
+}
+
+.hero-label {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
 }
 
 .hero-title {
@@ -18,13 +29,56 @@
     border-radius: 12px;
     padding: 14px 28px;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
     .hero-button:hover {
         background-color: #1d4ed8;
         transform: translateY(-2px);
     }
+
+
+/* ========================================
+   3D HERO IMAGE
+======================================== */
+
+.hero-image-container {
+    width: 120%;
+    max-width: none;
+    margin-left: -10%;
+    border-radius: 20px;
+    overflow: visible;
+}
+
+.hero-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    animation: heroFloat 6s ease-in-out infinite;
+}
+
+/* Floating animation */
+
+@keyframes heroFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+/* ========================================
+   MATERIAL CATEGORIES
+======================================== */
+
+.categories-section {
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
 
 .material-card {
     border: 1px solid #e5eaf2;
@@ -48,3 +102,53 @@
     .material-card .card-text {
         line-height: 1.6;
     }
+
+
+/* ========================================
+   TABLET & MOBILE
+======================================== */
+
+@media (max-width: 991px) {
+    .hero-section {
+        padding: 35px 22px;
+    }
+
+    .hero-image-container {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .hero-section {
+        padding: 30px 18px;
+    }
+
+    .hero-title {
+        letter-spacing: -0.5px;
+    }
+
+    .hero-label {
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .hero-image-container {
+        margin-top: 25px;
+    }
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-image,
+    .material-card,
+    .hero-button {
+        animation: none;
+        transition: none;
+    }
+}
