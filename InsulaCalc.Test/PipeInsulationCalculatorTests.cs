@@ -61,4 +61,25 @@ public class PipeInsulationCalculatorTests
         Assert.Throws<ArgumentOutOfRangeException>(() =>
     calculator.CalculateLooseSections(11, 0));
     }
+    [Fact]
+    public void CalculateRequiredSections_WhenLengthIsZero_ShouldThrowException()
+    {
+        // Arrange
+        var calculator = new PipeInsulationCalculator();
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            calculator.CalculateRequiredSections(0));
+    }
+    [Fact]
+    public void CalculateRequiredSections_WhenLengthIsNegative_ShouldThrowException()
+    {
+        // Arrange
+        var calculator = new PipeInsulationCalculator();
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            calculator.CalculateRequiredSections(-5));
+
+    }
 }
