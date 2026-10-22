@@ -41,4 +41,24 @@ public class PipeInsulationCalculatorTests
         // Assert
         Assert.Equal(1, result);
     }
+    [Fact]
+    public void CalculateFullPackages_WhenPackageSizeIsZero_ShouldThrowException()
+    {
+        // Arrange
+        var calculator = new PipeInsulationCalculator();
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+    calculator.CalculateFullPackages(11, 0));
+
+    }
+    [Fact]
+    public void CalculateLooseSections_WhenPackageSizeIsZero_ShouldThrowException()
+    {
+        // Arrange
+        var calculator = new PipeInsulationCalculator();
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+    calculator.CalculateLooseSections(11, 0));
+    }
 }
