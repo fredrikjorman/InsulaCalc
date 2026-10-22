@@ -1,6 +1,7 @@
 ﻿@page "/calculator"
 @rendermode InteractiveServer
 @using InsulaCalc.Services
+@using InsulaCalc.Models
 
 <PageTitle>Insulation Calculator</PageTitle>
 
@@ -34,6 +35,25 @@
     <p>Required pipe sections: @requiredPipeSections pcs</p>
     <p>Full packages: @fullPackages</p>
     <p>Loose pipe sections: @loosePipeSections</p>
+    <button @onclick="AddMaterialItem">Add to Material List</button>
+}
+<h2>Material List</h2>
+
+@if (materialItems.Count == 0)
+{
+    <p>No materials added yet.</p>
+}
+else
+{
+    @foreach (var item in materialItems)
+    {
+        <p>
+            Pipe Section @item.Diameter/@item.InsulationThickness -
+            @item.RequiredLength m -
+            @item.FullPackages packages -
+            @item.LooseSections loose sections
+        </p>
+    }
 }
 
 @code {
@@ -49,6 +69,11 @@
 
     private string errorMessage = "";
     private bool hasResult = false;
+    private List<MaterialItem> materialItems = new();
+    private int calculatedDiameter;
+    private int calculatedThickness;
+    private decimal calculatedLength;
+    private int calculatedPackageSize;
 
     private void CalculatePipeSections()
     {
@@ -66,6 +91,7 @@
             return;
         }
 
+
         requiredPipeSections = calculator.CalculateRequiredSections(requiredLength);
 
         fullPackages = calculator.CalculateFullPackages(requiredPipeSections, sectionsPerPackage);
@@ -73,5 +99,39 @@
         loosePipeSections = calculator.CalculateLooseSections(requiredPipeSections, sectionsPerPackage);
 
         hasResult = true;
+        calculatedDiameter = diameter;
+        calculatedThickness = insulationThickness;
+        calculatedLength = requiredLength;
+        calculatedPackageSize = sectionsPerPackage;
+    }
+    private void AddMaterialItem()
+    {
+        if (!hasResult)
+        {
+            return;
+        }
+        if (diameter != calculatedDiameter ||
+    insulationThickness != calculatedThickness ||
+    requiredLength != calculatedLength ||
+    sectionsPerPackage != calculatedPackageSize)
+        {
+            errorMessage = "Inputs have changed. Please calculate again.";
+            hasResult = false;
+            return;
+        }
+
+        var item = new MaterialItem
+        {
+            Id = Guid.NewGuid(),
+            Diameter = diameter,
+            InsulationThickness = insulationThickness,
+            RequiredLength = requiredLength,
+            SectionsPerPackage = sectionsPerPackage,
+            RequiredSections = requiredPipeSections,
+            FullPackages = fullPackages,
+            LooseSections = loosePipeSections
+        };
+
+        materialItems.Add(item);
     }
 }
