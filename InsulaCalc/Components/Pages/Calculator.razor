@@ -1,90 +1,255 @@
 ﻿@page "/calculator"
 @rendermode InteractiveServer
+
 @using InsulaCalc.Services
 @using InsulaCalc.Models
 
 <PageTitle>Insulation Calculator</PageTitle>
 
 <h1>Insulation Calculator</h1>
+
 <p>Calculate the amount of insulation needed for your project.</p>
 
-<label for="diameter">Pipe diameter (mm)</label>
-<input type="number" id="diameter" @bind="diameter" />
-<p>Selected diameter: @diameter mm</p>
+<!-- Calculator Inputs -->
 
-<label for="insulationThickness">Insulation thickness (mm)</label>
-<input type="number" id="insulationThickness" @bind="insulationThickness" />
-<p>Selected insulation thickness: @insulationThickness mm</p>
+<div class="mb-3">
+    <label for="diameter" class="form-label">
+        Pipe diameter (mm)
+    </label>
 
-<label for="requiredLength">Required length (m)</label>
-<input type="number" id="requiredLength" @bind="requiredLength" />
-<p>Selected required length: @requiredLength m</p>
+    <input type="number"
+           id="diameter"
+           class="form-control"
+           @bind="diameter" />
 
-<label for="sectionsPerPackage">Pipe sections per package</label>
-<input type="number" id="sectionsPerPackage" @bind="sectionsPerPackage" />
+    <p class="text-muted small mt-1">
+        Selected diameter: @diameter mm
+    </p>
+</div>
 
-<button @onclick="CalculatePipeSections">Calculate</button>
+<div class="mb-3">
+    <label for="insulationThickness" class="form-label">
+        Insulation thickness (mm)
+    </label>
 
+    <input type="number"
+           id="insulationThickness"
+           class="form-control"
+           @bind="insulationThickness" />
+
+    <p class="text-muted small mt-1">
+        Selected insulation thickness: @insulationThickness mm
+    </p>
+</div>
+
+<div class="mb-3">
+    <label for="requiredLength" class="form-label">
+        Required length (m)
+    </label>
+
+    <input type="number"
+           id="requiredLength"
+           class="form-control"
+           step="0.1"
+           @bind="requiredLength" />
+
+    <p class="text-muted small mt-1">
+        Selected required length: @requiredLength m
+    </p>
+</div>
+
+<div class="mb-3">
+    <label for="sectionsPerPackage" class="form-label">
+        Pipe sections per package
+    </label>
+
+    <input type="number"
+           id="sectionsPerPackage"
+           class="form-control"
+           @bind="sectionsPerPackage" />
+</div>
+
+<button type="button"
+        class="btn btn-primary"
+        @onclick="CalculatePipeSections">
+    Calculate
+</button>
+
+<!-- Error Message -->
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <p class="text-danger">@errorMessage</p>
+    <p class="text-danger mt-3">
+        @errorMessage
+    </p>
 }
 
+<!-- Calculation Result -->
 @if (hasResult)
 {
-    <p>Required pipe sections: @requiredPipeSections pcs</p>
-    <p>Full packages: @fullPackages</p>
-    <p>Loose pipe sections: @loosePipeSections</p>
-    <button @onclick="AddMaterialItem">Add to Material List</button>
-}
-<h2>Material List</h2>
+    <div class="card mt-4">
+        <div class="card-body">
 
-@if (materialItems.Count == 0)
-{
-    <p>No materials added yet.</p>
-}
-else
-{
+            <h2 class="h5">Calculation Result</h2>
 
-    @foreach (var item in materialItems)
-    {
-        <div class="d-flex align-items-center gap-3 mb-2" @key="item.Id">
-
-            <p class="mb-0">
-                Pipe Section @item.Diameter/@item.InsulationThickness -
-                @item.RequiredLength m -
-                @item.FullPackages packages -
-                @item.LooseSections loose sections
+            <p>
+                Required pipe sections:
+                <strong>@requiredPipeSections pcs</strong>
             </p>
 
-            <button class="btn btn-outline-danger btn-sm"
-                    @onclick="() => RemoveMaterialItem(item.Id)">
-                Remove
+            <p>
+                Full packages:
+                <strong>@fullPackages</strong>
+            </p>
+
+            <p>
+                Loose pipe sections:
+                <strong>@loosePipeSections</strong>
+            </p>
+
+            <button type="button"
+                    class="btn btn-success"
+                    @onclick="AddMaterialItem">
+                Add to Material List
             </button>
+
+        </div>
+    </div>
+}
+
+<!-- Modern Material List -->
+
+<section class="material-section mt-5">
+
+    <div class="material-header">
+
+        <div class="material-heading">
+
+            <div class="material-icon">▤</div>
+
+            <div>
+                <h2>Your material list</h2>
+                <p>Everything you need, neatly organized.</p>
+            </div>
+
+        </div>
+
+        <span class="material-count">
+            @materialItems.Count materials
+        </span>
+
+    </div>
+
+    @if (materialItems.Count == 0)
+    {
+        <div class="material-empty">
+            <h3>No materials yet</h3>
+            <p>Calculate your first pipe section and add it here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table material-table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Length</th>
+                        <th>Packages</th>
+                        <th>Loose</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in materialItems)
+                    {
+                        <tr @key="item.Id">
+
+                            <td>
+                                <div class="material-name">
+                                    Pipe @item.Diameter / @item.InsulationThickness
+                                </div>
+
+                                <div class="material-description">
+                                    Pipe insulation
+                                </div>
+                            </td>
+
+                            <td>
+                                @item.RequiredLength m
+                            </td>
+
+                            <td>
+                                <span class="package-number">
+                                    @item.FullPackages
+                                </span>
+                            </td>
+
+                            <td>
+                                @item.LooseSections
+                            </td>
+
+                            <td class="text-end">
+                                <button type="button"
+                                        class="remove-button"
+                                        aria-label="Remove pipe insulation material"
+                                        @onclick="() => RemoveMaterialItem(item.Id)">
+                                    Remove
+                                </button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
 
         </div>
     }
 
-}
+    <div class="material-footer">
+        <span>Smart insulation planning</span>
+        <span>InsulaCalc</span>
+    </div>
+
+</section>
 
 @code {
+
+    // Calculator Inputs
+
     private int diameter;
     private int insulationThickness;
     private decimal requiredLength;
+    private int sectionsPerPackage = 3;
+
+    // Calculation Results
 
     private int requiredPipeSections;
     private int fullPackages;
     private int loosePipeSections;
-    private int sectionsPerPackage = 3;
+
     private PipeInsulationCalculator calculator = new();
+
+    // Validation and State
 
     private string errorMessage = "";
     private bool hasResult = false;
+
+    // Material List
+
     private List<MaterialItem> materialItems = new();
+
+    // Saved Input Values
+
     private int calculatedDiameter;
     private int calculatedThickness;
     private decimal calculatedLength;
     private int calculatedPackageSize;
+
+    // Calculate Pipe Sections
 
     private void CalculatePipeSections()
     {
@@ -102,29 +267,40 @@ else
             return;
         }
 
+        requiredPipeSections =
+            calculator.CalculateRequiredSections(requiredLength);
 
-        requiredPipeSections = calculator.CalculateRequiredSections(requiredLength);
+        fullPackages =
+            calculator.CalculateFullPackages(
+                requiredPipeSections,
+                sectionsPerPackage);
 
-        fullPackages = calculator.CalculateFullPackages(requiredPipeSections, sectionsPerPackage);
-
-        loosePipeSections = calculator.CalculateLooseSections(requiredPipeSections, sectionsPerPackage);
+        loosePipeSections =
+            calculator.CalculateLooseSections(
+                requiredPipeSections,
+                sectionsPerPackage);
 
         hasResult = true;
+
         calculatedDiameter = diameter;
         calculatedThickness = insulationThickness;
         calculatedLength = requiredLength;
         calculatedPackageSize = sectionsPerPackage;
     }
+
+    // Add Material to List
+
     private void AddMaterialItem()
     {
         if (!hasResult)
         {
             return;
         }
+
         if (diameter != calculatedDiameter ||
-    insulationThickness != calculatedThickness ||
-    requiredLength != calculatedLength ||
-    sectionsPerPackage != calculatedPackageSize)
+            insulationThickness != calculatedThickness ||
+            requiredLength != calculatedLength ||
+            sectionsPerPackage != calculatedPackageSize)
         {
             errorMessage = "Inputs have changed. Please calculate again.";
             hasResult = false;
@@ -146,6 +322,8 @@ else
         materialItems.Add(item);
     }
 
+    // Remove Material from List
+
     private void RemoveMaterialItem(Guid id)
     {
         var item = materialItems.FirstOrDefault(x => x.Id == id);
@@ -155,5 +333,4 @@ else
             materialItems.Remove(item);
         }
     }
-
 }
