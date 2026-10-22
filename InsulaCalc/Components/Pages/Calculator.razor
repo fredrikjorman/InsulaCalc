@@ -45,15 +45,26 @@
 }
 else
 {
+
     @foreach (var item in materialItems)
     {
-        <p>
-            Pipe Section @item.Diameter/@item.InsulationThickness -
-            @item.RequiredLength m -
-            @item.FullPackages packages -
-            @item.LooseSections loose sections
-        </p>
+        <div class="d-flex align-items-center gap-3 mb-2" @key="item.Id">
+
+            <p class="mb-0">
+                Pipe Section @item.Diameter/@item.InsulationThickness -
+                @item.RequiredLength m -
+                @item.FullPackages packages -
+                @item.LooseSections loose sections
+            </p>
+
+            <button class="btn btn-outline-danger btn-sm"
+                    @onclick="() => RemoveMaterialItem(item.Id)">
+                Remove
+            </button>
+
+        </div>
     }
+
 }
 
 @code {
@@ -134,4 +145,15 @@ else
 
         materialItems.Add(item);
     }
+
+    private void RemoveMaterialItem(Guid id)
+    {
+        var item = materialItems.FirstOrDefault(x => x.Id == id);
+
+        if (item != null)
+        {
+            materialItems.Remove(item);
+        }
+    }
+
 }
