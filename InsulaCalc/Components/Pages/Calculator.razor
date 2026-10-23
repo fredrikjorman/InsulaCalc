@@ -234,6 +234,49 @@
 
     </section>
 
+    <!-- Project Summary -->
+
+    <section class="summary-section mt-4">
+
+        <div class="summary-header">
+            <h2>Project Summary</h2>
+            <p>Overview of your insulation requirements.</p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <div class="summary-item">
+                    <span>Total pipe length</span>
+                    <strong>@TotalLength m</strong>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="summary-item">
+                    <span>Required sections</span>
+                    <strong>@TotalSections</strong>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="summary-item">
+                    <span>Full packages</span>
+                    <strong>@TotalPackages</strong>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="summary-item">
+                    <span>Loose sections</span>
+                    <strong>@TotalLooseSections</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
 
 @code {
@@ -335,4 +378,17 @@
             materialItems.Remove(item);
         }
     }
+
+    private decimal TotalLength =>
+        materialItems.Sum(item => item.RequiredLength);
+
+    private int TotalSections =>
+        materialItems.Sum(item => item.RequiredSections);
+
+    private int TotalPackages =>
+        materialItems.Sum(item => item.FullPackages);
+
+    private int TotalLooseSections =>
+        materialItems.Sum(item => item.LooseSections);
+
 }
