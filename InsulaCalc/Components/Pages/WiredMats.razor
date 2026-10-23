@@ -4,85 +4,119 @@
 
 <PageTitle>Wired Mats Calculator</PageTitle>
 
-<div class="container py-5">
+<div class="wired-page">
 
-    <h1>Wired Mats Calculator</h1>
+    <div class="wired-heading">
+        <span class="wired-label">SMART INSULATION PLANNING</span>
+        <h1>Wired Mats Calculator</h1>
+        <p>Calculate the insulation area and rolls required for your project.</p>
+    </div>
 
-    <p>Calculate how much wired mat insulation you need.</p>
+    <section class="wired-card">
 
-    <div class="card p-4 mt-4">
+        <div class="wired-card-header">
+            <h2>Project measurements</h2>
+            <p>Enter the measurements of your insulation project.</p>
+        </div>
 
-        <h3>Project measurements</h3>
-
-        <div class="row g-3 mt-2">
+        <div class="row g-4">
 
             <div class="col-md-6">
-                <label class="form-label">Pipe diameter (mm)</label>
-                <input type="number"
-                       class="form-control"
+                <label for="pipeDiameter" class="form-label">
+                    Pipe diameter <span>(mm)</span>
+                </label>
+                <input id="pipeDiameter"
+                       type="number"
+                       min="1"
+                       class="form-control wired-input"
                        @bind="pipeDiameter" />
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Insulation thickness (mm)</label>
-                <input type="number"
-                       class="form-control"
+                <label for="insulationThickness" class="form-label">
+                    Insulation thickness <span>(mm)</span>
+                </label>
+                <input id="insulationThickness"
+                       type="number"
+                       min="1"
+                       class="form-control wired-input"
                        @bind="insulationThickness" />
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Pipe length (m)</label>
-                <input type="number"
+                <label for="pipeLength" class="form-label">
+                    Pipe length <span>(m)</span>
+                </label>
+                <input id="pipeLength"
+                       type="number"
+                       min="0.1"
                        step="0.1"
-                       class="form-control"
+                       class="form-control wired-input"
                        @bind="pipeLength" />
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Roll area (m²)</label>
-                <input type="number"
+                <label for="rollArea" class="form-label">
+                    Roll area <span>(m²)</span>
+                </label>
+                <input id="rollArea"
+                       type="number"
+                       min="0.1"
                        step="0.1"
-                       class="form-control"
+                       class="form-control wired-input"
                        @bind="rollArea" />
             </div>
 
         </div>
 
-        <button class="btn btn-primary mt-4"
+        <button type="button"
+                class="wired-calculate-button"
                 @onclick="Calculate">
-            Calculate materials
+            Calculate materials →
         </button>
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <div class="alert alert-danger mt-3">
+            <div class="alert alert-danger mt-3" role="alert">
                 @errorMessage
             </div>
         }
 
-    </div>
+    </section>
 
     @if (hasResult)
     {
-        <div class="card p-4 mt-4">
+        <section class="wired-result-card mt-4">
 
-            <h3>Calculation results</h3>
+            <div class="wired-result-header">
+                <div>
+                    <h2>Calculation results</h2>
+                    <p>Your estimated insulation requirements.</p>
+                </div>
+                <span class="wired-result-status">Calculated</span>
+            </div>
 
-            <div class="row mt-3">
+            <div class="row g-3">
 
                 <div class="col-md-6">
-                    <h5>Required area</h5>
-                    <h2>@requiredArea m²</h2>
+                    <div class="wired-result-item">
+                        <span>Required area</span>
+                        <strong>@requiredArea m²</strong>
+                        <small>Insulation area</small>
+                    </div>
                 </div>
 
                 <div class="col-md-6">
-                    <h5>Required rolls</h5>
-                    <h2>@requiredRolls</h2>
+                    <div class="wired-result-item">
+                        <span>Required rolls</span>
+                        <strong>@requiredRolls</strong>
+                        <small>Full rolls</small>
+                    </div>
                 </div>
 
             </div>
 
-        </div>
+        </section>
     }
 
 </div>
