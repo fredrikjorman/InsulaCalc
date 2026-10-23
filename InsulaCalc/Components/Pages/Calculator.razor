@@ -1,6 +1,10 @@
 ﻿@page "/calculator"
 @rendermode InteractiveServer
 
+
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+@using System.Text
 @using InsulaCalc.Services
 @using InsulaCalc.Models
 
@@ -227,6 +231,16 @@
             </div>
         }
 
+        @if (materialItems.Count > 0)
+        {
+            <button type="button"
+                    class="btn btn-primary mt-3"
+                    @onclick="DownloadMaterialCsv">
+                Export Material List
+            </button>
+        }
+
+
         <div class="material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -390,5 +404,47 @@
 
     private int TotalLooseSections =>
         materialItems.Sum(item => item.LooseSections);
+
+        
+    private string GenerateMaterialCsv()
+    {
+        var csv = new StringBuilder();
+
+        csv.AppendLine("Material;Length (m);Required Sections;Packages;Loose Sections");
+
+        foreach (var item in materialItems)
+        {
+            csv.AppendLine(
+                $"Pipe {item.Diameter}/{item.InsulationThickness};" +
+                $"{item.RequiredLength};" +
+                $"{item.RequiredSections};" +
+                $"{item.FullPackages};" +
+                $"{item.LooseSections}");
+        }
+
+        return csv.ToString();
+    }
+
+    private async Task DownloadMaterialCsv()
+    {
+        if (materialItems.Count == 0)
+        {
+            return;
+        }
+
+        var csv = GenerateMaterialCsv();
+
+        var bytes = Encoding.UTF8.GetBytes("\uFEFF" + csv);
+
+        using var stream = new MemoryStream(bytes);
+        using var streamReference = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync(
+            "downloadFileFromStream",
+            "InsulaCalc-MaterialList.csv",
+            streamReference);
+    }
+
+
 
 }
