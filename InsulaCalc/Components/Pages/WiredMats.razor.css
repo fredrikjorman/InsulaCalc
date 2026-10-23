@@ -188,4 +188,24 @@
     .wired-calculate-button {
         width: 100%;
     }
+
+    /* ADD MATERIAL BUTTON */
+
+    .wired-add-button {
+        margin-top: 24px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 11px;
+        padding: 13px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+        .wired-add-button:hover {
+            background: #1d4ed8;
+        }
+
 }

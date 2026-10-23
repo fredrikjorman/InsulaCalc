@@ -1,6 +1,7 @@
 ﻿@page "/wired-mats"
 @rendermode InteractiveServer
 @using InsulaCalc.Services
+@using InsulaCalc.Models
 
 <PageTitle>Wired Mats Calculator</PageTitle>
 
@@ -116,6 +117,13 @@
 
             </div>
 
+            <button type="button"
+                    class="wired-add-button"
+                    @onclick="AddMaterialItem">
+                + Add to Material List
+            </button>
+
+
         </section>
     }
 
@@ -134,6 +142,13 @@
     private string errorMessage = "";
 
     private readonly WiredMatCalculator calculator = new();
+    private List<WiredMatItem> materialItems = new();
+
+    private int calculatedDiameter;
+    private int calculatedThickness;
+    private decimal calculatedLength;
+    private decimal calculatedRollArea;
+
 
     private void Calculate()
     {
@@ -154,10 +169,64 @@
             insulationThickness,
             pipeLength);
 
+        
         requiredRolls = calculator.CalculateRequiredRolls(
             requiredArea,
             rollArea);
 
+        calculatedDiameter = pipeDiameter;
+        calculatedThickness = insulationThickness;
+        calculatedLength = pipeLength;
+        calculatedRollArea = rollArea;
+
         hasResult = true;
+
     }
+
+    private void AddMaterialItem()
+
+    {
+        if (!hasResult)
+        {
+            return;
+        }
+
+        if (pipeDiameter != calculatedDiameter ||
+            insulationThickness != calculatedThickness ||
+            pipeLength != calculatedLength ||
+            rollArea != calculatedRollArea)
+        {
+            errorMessage = "Inputs have changed. Please calculate again.";
+            hasResult = false;
+            return;
+        }
+
+        var item = new WiredMatItem
+        {
+            PipeDiameter = calculatedDiameter,
+            InsulationThickness = calculatedThickness,
+            PipeLength = calculatedLength,
+            RollArea = calculatedRollArea,
+            RequiredArea = requiredArea,
+            RequiredRolls = requiredRolls
+        };
+
+        materialItems.Add(item);
+
+        errorMessage = "";
+        hasResult = false;
+    }
+
+
+    private void RemoveMaterialItem(Guid id)
+    {
+        var item = materialItems.FirstOrDefault(x => x.Id == id);
+
+        if (item != null)
+        {
+            materialItems.Remove(item);
+        }
+    }
+
+
 }
