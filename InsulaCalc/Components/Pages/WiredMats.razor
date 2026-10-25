@@ -127,6 +127,123 @@
         </section>
     }
 
+    <!-- Wired Mats Material List -->
+
+    <section class="wired-material-section mt-5">
+
+        <div class="wired-material-header">
+            <div>
+                <h2>Your material list</h2>
+                <p>Everything you need, neatly organized.</p>
+            </div>
+
+            <span class="wired-material-count">
+                @materialItems.Count materials
+            </span>
+        </div>
+
+        @if (materialItems.Count == 0)
+        {
+            <div class="wired-material-empty">
+                <h3>No materials yet</h3>
+                <p>Calculate your first wired mat and add it here.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table wired-material-table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Length</th>
+                            <th>Area</th>
+                            <th>Rolls</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in materialItems)
+                        {
+                            <tr @key="item.Id">
+                                <td>
+                                    <div class="wired-material-name">
+                                        Pipe @item.PipeDiameter / @item.InsulationThickness
+                                    </div>
+                                    <div class="wired-material-description">
+                                        Wired mat insulation
+                                    </div>
+                                </td>
+
+                                <td>@item.PipeLength m</td>
+                                <td>@item.RequiredArea m²</td>
+                                <td>
+                                    <span class="wired-roll-number">
+                                        @item.RequiredRolls
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    <button type="button"
+                                            class="wired-remove-button"
+                                            @onclick="() => RemoveMaterialItem(item.Id)">
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        }
+
+        <div class="wired-material-footer">
+            <span>Smart insulation planning</span>
+            <span>InsulaCalc</span>
+        </div>
+
+    </section>
+
+    <!-- Project Summary -->
+
+    <section class="wired-summary-section mt-4">
+
+        <div class="wired-summary-header">
+            <h2>Project Summary</h2>
+            <p>Overview of your wired mat requirements.</p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="wired-summary-item">
+                    <span>Total pipe length</span>
+                    <strong>@TotalPipeLength m</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="wired-summary-item">
+                    <span>Total required area</span>
+                    <strong>@TotalRequiredArea m²</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="wired-summary-item">
+                    <span>Total required rolls</span>
+                    <strong>@TotalRequiredRolls</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
 </div>
 
 @code {
@@ -227,6 +344,15 @@
             materialItems.Remove(item);
         }
     }
+
+    private decimal TotalPipeLength =>
+        materialItems.Sum(item => item.PipeLength);
+
+    private decimal TotalRequiredArea =>
+        materialItems.Sum(item => item.RequiredArea);
+
+    private int TotalRequiredRolls =>
+        materialItems.Sum(item => item.RequiredRolls);
 
 
 }

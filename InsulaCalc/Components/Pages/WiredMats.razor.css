@@ -208,4 +208,189 @@
             background: #1d4ed8;
         }
 
+    /* WIRED MATS MATERIAL LIST */
+
+    .wired-material-section {
+        background: #ffffff;
+        border: 1px solid #e5eaf2;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    .wired-material-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 25px;
+    }
+
+        .wired-material-header h2 {
+            color: #172b4d;
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .wired-material-header p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .wired-material-count {
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 8px 13px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .wired-material-table {
+        margin-bottom: 0;
+    }
+
+        .wired-material-table th {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 15px;
+        }
+
+        .wired-material-table td {
+            color: #334155;
+            font-size: 14px;
+            padding: 18px 15px;
+        }
+
+    .wired-material-name {
+        color: #172b4d;
+        font-weight: 700;
+    }
+
+    .wired-material-description {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .wired-roll-number {
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 8px;
+        padding: 7px 12px;
+        font-weight: 700;
+    }
+
+    .wired-remove-button {
+        background: #fff1f2;
+        color: #be123c;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+        .wired-remove-button:hover {
+            background: #ffe4e6;
+        }
+
+    .wired-material-empty {
+        text-align: center;
+        padding: 45px 20px;
+        background: #f8fafc;
+        border-radius: 14px;
+    }
+
+        .wired-material-empty h3 {
+            font-size: 17px;
+            color: #334155;
+        }
+
+        .wired-material-empty p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+    .wired-material-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        border-top: 1px solid #e5eaf2;
+        padding-top: 20px;
+        margin-top: 24px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    @media (max-width: 767px) {
+        .wired-material-section {
+            padding: 20px;
+        }
+
+        .wired-material-header {
+            flex-wrap: wrap;
+        }
+    }
+
+    /* PROJECT SUMMARY */
+
+    .wired-summary-section {
+        background: linear-gradient(135deg, #f8fbff, #eef4ff);
+        border: 1px solid #dbeafe;
+        border-radius: 20px;
+        padding: 30px;
+    }
+
+    .wired-summary-header {
+        margin-bottom: 24px;
+    }
+
+        .wired-summary-header h2 {
+            color: #172b4d;
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .wired-summary-header p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .wired-summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: #ffffff;
+        border: 1px solid #e5eaf2;
+        border-radius: 14px;
+        padding: 24px;
+        height: 100%;
+    }
+
+        .wired-summary-item span {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .wired-summary-item strong {
+            color: #172b4d;
+            font-size: 30px;
+            font-weight: 750;
+        }
+
+    @media (max-width: 767px) {
+        .wired-summary-section {
+            padding: 20px;
+        }
+    }
+
+
 }
