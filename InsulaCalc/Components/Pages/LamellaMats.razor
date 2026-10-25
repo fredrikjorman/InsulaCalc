@@ -3,6 +3,11 @@
 
 @using InsulaCalc.Models
 @using InsulaCalc.Services
+@using System.Text
+@using System.Globalization
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
 
 <PageTitle>Lamella Mats | InsulaCalc</PageTitle>
 
@@ -145,6 +150,15 @@
             </div>
         }
 
+        @if (materialItems.Count > 0)
+        {
+            <button type="button"
+                    class="lamella-export-button"
+                    @onclick="DownloadMaterialCsv">
+                Export Material List
+            </button>
+        }
+
         <div class="lamella-material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -152,6 +166,42 @@
 
     </section>
 
+    
+    <!-- PROJECT SUMMARY -->
+
+    <section class="lamella-summary-section mt-4">
+
+        <div class="lamella-summary-header">
+            <h2>Project Summary</h2>
+            <p>Overview of your lamella mat requirements.</p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="lamella-summary-item">
+                    <span>Total pipe length</span>
+                    <strong>@TotalPipeLength m</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="lamella-summary-item">
+                    <span>Total required area</span>
+                    <strong>@TotalRequiredArea m²</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="lamella-summary-item">
+                    <span>Total required rolls</span>
+                    <strong>@TotalRequiredRolls</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
 
 </div>
 
@@ -253,6 +303,47 @@
 
     private int TotalRequiredRolls =>
         materialItems.Sum(item => item.RequiredRolls);
+
+        
+    private string GenerateMaterialCsv()
+    {
+        var csv = new StringBuilder();
+
+        csv.AppendLine("Material;Length (m);Roll Area (m2);Required Area (m2);Required Rolls");
+
+        foreach (var item in materialItems)
+        {
+            csv.AppendLine(
+                $"Pipe {item.PipeDiameter}/{item.InsulationThickness};" +
+                $"{item.PipeLength.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RollArea.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RequiredArea.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RequiredRolls}");
+        }
+
+        return csv.ToString();
+    }
+
+    private async Task DownloadMaterialCsv()
+    {
+        if (materialItems.Count == 0)
+        {
+            return;
+        }
+
+        var csv = GenerateMaterialCsv();
+
+        var bytes = Encoding.UTF8.GetBytes("\uFEFF" + csv);
+
+        using var stream = new MemoryStream(bytes);
+        using var streamReference = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync(
+            "downloadFileFromStream",
+            "InsulaCalc-LamellaMats.csv",
+            streamReference);
+    }
+
 
 
 }

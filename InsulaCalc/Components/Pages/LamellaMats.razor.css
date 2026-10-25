@@ -226,4 +226,85 @@
         }
     }
 
+    /* PROJECT SUMMARY */
+
+    .lamella-summary-section {
+        background: linear-gradient(135deg, #f8fbff, #eef4ff);
+        border: 1px solid #dbeafe;
+        border-radius: 20px;
+        padding: 30px;
+    }
+
+    .lamella-summary-header {
+        margin-bottom: 24px;
+    }
+
+        .lamella-summary-header h2 {
+            color: #172b4d;
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .lamella-summary-header p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .lamella-summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: #ffffff;
+        border: 1px solid #e5eaf2;
+        border-radius: 14px;
+        padding: 24px;
+        height: 100%;
+    }
+
+        .lamella-summary-item span {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .lamella-summary-item strong {
+            color: #172b4d;
+            font-size: 30px;
+            font-weight: 750;
+        }
+
+    @media (max-width: 767px) {
+        .lamella-summary-section {
+            padding: 20px;
+        }
+    }
+
+    /* EXPORT BUTTON */
+
+    .lamella-export-button {
+        margin-top: 24px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 11px;
+        padding: 13px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+        .lamella-export-button:hover {
+            background: #1d4ed8;
+        }
+
+    @media (max-width: 767px) {
+        .lamella-export-button {
+            width: 100%;
+        }
+    }
+
+
 }
