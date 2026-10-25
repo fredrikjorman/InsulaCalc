@@ -1,0 +1,259 @@
+﻿@page "/lamella-mats"
+@rendermode InteractiveServer
+
+@using InsulaCalc.Models
+@using InsulaCalc.Services
+
+<PageTitle>Lamella Mats | InsulaCalc</PageTitle>
+
+<div class="lamella-page">
+
+    <div class="lamella-header">
+        <h1>Lamella Mats Calculator</h1>
+
+        <p>
+            Calculate insulation materials for round pipes
+            and ventilation ducts.
+        </p>
+    </div>
+
+    <div class="lamella-calculator">
+
+        <h2>Pipe Dimensions</h2>
+
+        <div class="mb-3">
+            <label class="form-label">Pipe diameter (mm)</label>
+            <InputNumber @bind-Value="calculation.PipeDiameter"
+                         class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Insulation thickness (mm)</label>
+            <InputNumber @bind-Value="calculation.InsulationThickness"
+                         class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Pipe length (m)</label>
+            <InputNumber @bind-Value="calculation.PipeLength"
+                         class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Roll area (m²)</label>
+            <InputNumber @bind-Value="calculation.RollArea"
+                         class="form-control" />
+        </div>
+
+        <button class="btn btn-primary"
+                @onclick="Calculate">
+            Calculate Materials
+        </button>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger mt-3">
+                @errorMessage
+            </div>
+        }
+
+        @if (hasResult)
+        {
+            <div class="lamella-result mt-4">
+                <h3>Calculation Results</h3>
+
+                <p>
+                    Required area:
+                    <strong>@requiredArea m²</strong>
+                </p>
+
+                <p>
+                    Required rolls:
+                    <strong>@requiredRolls</strong>
+                </p>
+
+                <button class="btn btn-primary mt-3"
+                        @onclick="AddMaterialItem">
+                    Add to Material List
+                </button>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- MATERIAL LIST -->
+
+    <section class="lamella-material-section mt-5">
+
+        <div class="lamella-material-header">
+            <div>
+                <h2>Your Material List</h2>
+                <p>Overview of your calculated lamella mats.</p>
+            </div>
+
+            <span class="lamella-material-count">
+                @materialItems.Count materials
+            </span>
+        </div>
+
+        @if (materialItems.Count == 0)
+        {
+            <div class="lamella-empty-state">
+                No materials added yet.
+                Calculate and add your first material above.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table lamella-material-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Length</th>
+                            <th>Area</th>
+                            <th>Rolls</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in materialItems)
+                        {
+                            <tr @key="item.Id">
+                                <td>
+                                    Pipe @item.PipeDiameter / @item.InsulationThickness
+                                </td>
+
+                                <td>@item.PipeLength m</td>
+
+                                <td>@item.RequiredArea m²</td>
+
+                                <td>@item.RequiredRolls</td>
+
+                                <td>
+                                    <button class="lamella-remove-button"
+                                            @onclick="() => RemoveMaterialItem(item.Id)">
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="lamella-material-footer">
+            <span>Smart insulation planning</span>
+            <span>InsulaCalc</span>
+        </div>
+
+    </section>
+
+
+</div>
+
+
+@code {
+    private LamellaMatCalculation calculation = new();
+
+    private LamellaMatCalculator calculator = new();
+
+    private decimal requiredArea;
+    private int requiredRolls;
+    private bool hasResult = false;
+    private string? errorMessage;
+
+    private List<LamellaMatItem> materialItems = new();
+
+    private int calculatedDiameter;
+    private int calculatedThickness;
+    private decimal calculatedLength;
+    private decimal calculatedRollArea;
+
+
+    
+    private void Calculate()
+    {
+        hasResult = false;
+
+        try
+        {
+            requiredArea = calculator.CalculateRequiredArea(
+                calculation.PipeDiameter,
+                calculation.InsulationThickness,
+                calculation.PipeLength);
+
+            requiredRolls = calculator.CalculateRequiredRolls(
+                requiredArea,
+                calculation.RollArea);
+
+            calculatedDiameter = calculation.PipeDiameter;
+            calculatedThickness = calculation.InsulationThickness;
+            calculatedLength = calculation.PipeLength;
+            calculatedRollArea = calculation.RollArea;
+
+            errorMessage = null;
+            hasResult = true;
+        }
+        catch (ArgumentException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void AddMaterialItem()
+    {
+        if (!hasResult)
+            return;
+
+        if (calculation.PipeDiameter != calculatedDiameter ||
+            calculation.InsulationThickness != calculatedThickness ||
+            calculation.PipeLength != calculatedLength ||
+            calculation.RollArea != calculatedRollArea)
+        {
+            errorMessage = "Inputs have changed. Please calculate again.";
+            hasResult = false;
+            return;
+        }
+
+        var item = new LamellaMatItem
+        {
+            PipeDiameter = calculatedDiameter,
+            InsulationThickness = calculatedThickness,
+            PipeLength = calculatedLength,
+            RollArea = calculatedRollArea,
+            RequiredArea = requiredArea,
+            RequiredRolls = requiredRolls
+        };
+
+        materialItems.Add(item);
+
+        hasResult = false;
+        errorMessage = null;
+    }
+
+    private void RemoveMaterialItem(Guid id)
+    {
+        var item = materialItems.FirstOrDefault(x => x.Id == id);
+
+        if (item != null)
+        {
+            materialItems.Remove(item);
+        }
+    }
+
+    private decimal TotalPipeLength =>
+        materialItems.Sum(item => item.PipeLength);
+
+    private decimal TotalRequiredArea =>
+        materialItems.Sum(item => item.RequiredArea);
+
+    private int TotalRequiredRolls =>
+        materialItems.Sum(item => item.RequiredRolls);
+
+
+}
+
