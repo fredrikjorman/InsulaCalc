@@ -2,6 +2,11 @@
 @rendermode InteractiveServer
 @using InsulaCalc.Services
 @using InsulaCalc.Models
+@using System.Text
+@using System.Globalization
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
 
 <PageTitle>Wired Mats Calculator</PageTitle>
 
@@ -200,6 +205,15 @@
             </div>
         }
 
+        @if (materialItems.Count > 0)
+        {
+            <button type="button"
+                    class="wired-export-button"
+                    @onclick="DownloadMaterialCsv">
+                Export Material List
+            </button>
+        }
+
         <div class="wired-material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -353,6 +367,46 @@
 
     private int TotalRequiredRolls =>
         materialItems.Sum(item => item.RequiredRolls);
+
+        
+    private string GenerateMaterialCsv()
+    {
+        var csv = new StringBuilder();
+
+        csv.AppendLine("Material;Length (m);Roll Area (m2);Required Area (m2);Required Rolls");
+
+        foreach (var item in materialItems)
+        {
+            csv.AppendLine(
+                $"Pipe {item.PipeDiameter}/{item.InsulationThickness};" +
+                $"{item.PipeLength.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RollArea.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RequiredArea.ToString(CultureInfo.InvariantCulture)};" +
+                $"{item.RequiredRolls}");
+        }
+
+        return csv.ToString();
+    }
+
+    private async Task DownloadMaterialCsv()
+    {
+        if (materialItems.Count == 0)
+        {
+            return;
+        }
+
+        var csv = GenerateMaterialCsv();
+
+        var bytes = Encoding.UTF8.GetBytes("\uFEFF" + csv);
+
+        using var stream = new MemoryStream(bytes);
+        using var streamReference = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync(
+            "downloadFileFromStream",
+            "InsulaCalc-WiredMats.csv",
+            streamReference);
+    }
 
 
 }

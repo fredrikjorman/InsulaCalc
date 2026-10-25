@@ -393,4 +393,29 @@
     }
 
 
+    /* EXPORT BUTTON */
+
+    .wired-export-button {
+        margin-top: 24px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 11px;
+        padding: 13px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+        .wired-export-button:hover {
+            background: #1d4ed8;
+        }
+
+    @media (max-width: 767px) {
+        .wired-export-button {
+            width: 100%;
+        }
+    }
+
 }
