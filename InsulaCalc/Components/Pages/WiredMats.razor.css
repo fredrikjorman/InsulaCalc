@@ -188,7 +188,7 @@
     .wired-calculate-button {
         width: 100%;
     }
-
+}
     /* ADD MATERIAL BUTTON */
 
     .wired-add-button {
@@ -418,4 +418,261 @@
         }
     }
 
+/* MATERIAL LIST DESIGN IMPROVEMENTS */
+
+.wired-material-table {
+    width: 100%;
+    margin-bottom: 0;
 }
+
+    .wired-material-table thead th {
+        background: #f8faff;
+        color: #64748b;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 16px;
+        border-bottom: 1px solid #e5eaf2;
+    }
+
+    .wired-material-table tbody td {
+        color: #334155;
+        font-size: 14px;
+        padding: 20px 16px;
+        border-bottom: 1px solid #edf1f7;
+        vertical-align: middle;
+    }
+
+    .wired-material-table tbody tr:hover td {
+        background: #f8fbff;
+    }
+
+.wired-material-name {
+    color: #172b4d;
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.wired-roll-number {
+    color: #1d4ed8;
+    background: transparent;
+    padding: 0;
+    font-weight: 700;
+}
+
+.wired-remove-button {
+    background: transparent;
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+    padding: 7px 12px;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .wired-remove-button:hover {
+        background: #fef2f2;
+        border-color: #f87171;
+    }
+
+@media (max-width: 767px) {
+    .wired-material-table {
+        min-width: 540px;
+    }
+}
+
+
+/* RESULT DESIGN IMPROVEMENTS */
+
+.wired-result-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.wired-result-item {
+    padding: 22px;
+    gap: 0;
+}
+
+    .wired-result-item strong {
+        font-size: 38px;
+        line-height: 1.3;
+        margin: 8px 0;
+    }
+
+/* ADD MATERIAL BUTTON */
+
+.wired-add-button {
+    margin-top: 25px;
+    padding: 13px 22px;
+    background: #172b4d;
+    border: none;
+    border-radius: 11px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+    .wired-add-button:hover {
+        background: #29466f;
+    }
+
+/* CALCULATE BUTTON */
+
+.wired-calculate-button {
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-weight: 650;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .wired-calculate-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+@media (max-width: 767px) {
+    .wired-add-button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wired-add-button,
+    .wired-calculate-button {
+        transition: none;
+    }
+}
+
+/* INPUT DESIGN IMPROVEMENTS */
+
+.wired-input {
+    height: 52px;
+    border: 1px solid #dbe3ee;
+    border-radius: 11px;
+    background: #f9fbff;
+    padding: 12px 15px;
+    color: #172b4d;
+    font-size: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .wired-input:focus {
+        background: #ffffff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+
+/* PROJECT SUMMARY IMPROVEMENTS */
+
+.wired-summary-item {
+    padding: 22px;
+}
+
+    .wired-summary-item strong {
+        font-size: 30px;
+    }
+
+.wired-summary-section {
+    padding: 30px;
+}
+
+/* MOBILE */
+
+@media (max-width: 767px) {
+    .wired-summary-section {
+        padding: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wired-input {
+        transition: none;
+    }
+}
+
+/* MATCH PIPE SECTIONS MATERIAL LIST */
+
+.wired-material-section {
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(30, 64, 120, 0.05);
+}
+
+.wired-material-header {
+    flex-wrap: wrap;
+}
+
+.wired-material-empty {
+    text-align: center;
+    background: #f8fbff;
+    border: 1px dashed #dbe5f3;
+    border-radius: 14px;
+    padding: 38px 20px;
+}
+
+    .wired-material-empty h3 {
+        color: #172b4d;
+        font-size: 18px;
+        font-weight: 650;
+    }
+
+    .wired-material-empty p {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+.wired-material-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #edf1f7;
+}
+
+    .wired-material-footer span:last-child {
+        color: #2563eb;
+        font-weight: 700;
+    }
+
+@media (max-width: 767px) {
+    .wired-material-section {
+        padding: 18px;
+    }
+}
+
+/* MATERIAL LIST ICON */
+
+.wired-material-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.wired-material-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    background: #eaf2ff;
+    color: #2563eb;
+    border-radius: 14px;
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+.wired-material-heading h2 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.wired-material-heading p {
+    margin: 5px 0 0;
+}
+
+
+
