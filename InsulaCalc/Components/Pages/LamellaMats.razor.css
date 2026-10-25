@@ -69,20 +69,24 @@
 
     /* CALCULATE BUTTON */
 
+
     .lamella-calculator .btn-primary {
         background: #2563eb;
+        color: #ffffff;
         border: none;
-        border-radius: 11px;
-        padding: 14px 26px;
-        font-weight: 600;
+        border-radius: 12px;
+        padding: 16px 28px;
         font-size: 15px;
-        margin-top: 12px;
+        font-weight: 650;
+        margin-top: 32px;
         transition: background 0.2s ease;
     }
 
         .lamella-calculator .btn-primary:hover {
             background: #1d4ed8;
         }
+
+
 
 /* RESULTS */
 
@@ -129,6 +133,7 @@
         .lamella-calculator .btn-primary {
             width: 100%;
         }
+}
 
     /* MATERIAL LIST */
 
@@ -300,11 +305,263 @@
             background: #1d4ed8;
         }
 
+@media (max-width: 767px) {
+    .lamella-export-button {
+        width: 100%;
+    }
+}
+
+
+    /* MATERIAL LIST DESIGN */
+
+    .lamella-material-section {
+        padding: 28px;
+        box-shadow: 0 8px 30px rgba(30, 64, 120, 0.05);
+    }
+
+    .lamella-material-header {
+        flex-wrap: wrap;
+    }
+
+    .lamella-material-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .lamella-material-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        background: #eaf2ff;
+        color: #2563eb;
+        border-radius: 14px;
+        font-size: 25px;
+        flex-shrink: 0;
+    }
+
+    .lamella-material-heading h2 {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 700;
+    }
+
+    .lamella-material-heading p {
+        margin: 5px 0 0;
+    }
+
+    .lamella-empty-state {
+        text-align: center;
+        background: #f8fbff;
+        border: 1px dashed #dbe5f3;
+        border-radius: 14px;
+        padding: 38px 20px;
+    }
+
+        .lamella-empty-state h3 {
+            color: #172b4d;
+            font-size: 18px;
+            font-weight: 650;
+        }
+
+        .lamella-empty-state p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+    .lamella-material-footer span:last-child {
+        color: #2563eb;
+        font-weight: 700;
+    }
+
     @media (max-width: 767px) {
-        .lamella-export-button {
-            width: 100%;
+        .lamella-material-section {
+            padding: 18px;
         }
     }
 
+/* MATCH PIPE SECTIONS TYPOGRAPHY */
 
+.lamella-page {
+    font-family: "Segoe UI", Arial, sans-serif;
 }
+
+.lamella-material-heading h2 {
+    color: #172b4d;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+}
+
+.lamella-material-heading p {
+    color: #718096;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.lamella-empty-state h3 {
+    color: #172b4d;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+.lamella-empty-state p {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.lamella-material-count {
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #dbeafe;
+    border-radius: 30px;
+}
+
+/* RESULT CARD DESIGN */
+
+.lamella-result {
+    background: linear-gradient(135deg, #f8fbff, #eef4ff);
+    border: 1px solid #dbeafe;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.lamella-result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+    .lamella-result-header h2 {
+        color: #172b4d;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .lamella-result-header p {
+        color: #64748b;
+        font-size: 14px;
+        margin: 0;
+    }
+
+.lamella-result-status {
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 30px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.lamella-result-item {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 14px;
+    padding: 22px;
+    height: 100%;
+}
+
+    .lamella-result-item span {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .lamella-result-item strong {
+        color: #172b4d;
+        font-size: 38px;
+        font-weight: 750;
+        line-height: 1.3;
+        margin: 8px 0;
+    }
+
+    .lamella-result-item small {
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+.lamella-add-button {
+    margin-top: 25px;
+    padding: 13px 22px;
+    background: #172b4d;
+    border: none;
+    border-radius: 11px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+    .lamella-add-button:hover {
+        background: #29466f;
+    }
+
+@media (max-width: 767px) {
+    .lamella-result {
+        padding: 20px;
+    }
+
+    .lamella-add-button {
+        width: 100%;
+    }
+}
+
+/* HEADER DESIGN */
+
+.lamella-eyebrow {
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 750;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* PROJECT MEASUREMENTS DESIGN */
+
+.lamella-calculator h2 {
+    font-size: 23px;
+    font-weight: 700;
+    color: #172b4d;
+    margin-bottom: 8px;
+}
+
+.lamella-form-description {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.lamella-calculator .form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #172b4d;
+    margin-bottom: 12px;
+}
+
+.lamella-calculator .form-control {
+    background: #f8faff;
+    border: 1px solid #dbe5f3;
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 16px;
+    color: #172b4d;
+}
+
+    .lamella-calculator .form-control:focus {
+        background: #ffffff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+

@@ -674,5 +674,43 @@
     margin: 5px 0 0;
 }
 
+/* MATCH PIPE SECTIONS TYPOGRAPHY */
+
+.wired-page {
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.wired-material-heading h2 {
+    color: #172b4d;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+}
+
+.wired-material-heading p {
+    color: #718096;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.wired-material-empty h3 {
+    color: #172b4d;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+.wired-material-empty p {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.wired-material-count {
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #dbeafe;
+    border-radius: 30px;
+}
+
 
 

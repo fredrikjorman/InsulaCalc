@@ -11,44 +11,61 @@
 
 <PageTitle>Lamella Mats | InsulaCalc</PageTitle>
 
+
 <div class="lamella-page">
 
     <div class="lamella-header">
+
+        <div class="lamella-eyebrow">
+            SMART INSULATION PLANNING
+        </div>
+
         <h1>Lamella Mats Calculator</h1>
 
         <p>
             Calculate insulation materials for round pipes
             and ventilation ducts.
         </p>
+
     </div>
 
+
+    
     <div class="lamella-calculator">
 
-        <h2>Pipe Dimensions</h2>
+        <h2>Project measurements</h2>
+        <p class="lamella-form-description">
+            Enter the measurements of your insulation project.
+        </p>
 
-        <div class="mb-3">
-            <label class="form-label">Pipe diameter (mm)</label>
-            <InputNumber @bind-Value="calculation.PipeDiameter"
-                         class="form-control" />
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label class="form-label">Pipe diameter (mm)</label>
+                <InputNumber @bind-Value="calculation.PipeDiameter"
+                             class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Insulation thickness (mm)</label>
+                <InputNumber @bind-Value="calculation.InsulationThickness"
+                             class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Pipe length (m)</label>
+                <InputNumber @bind-Value="calculation.PipeLength"
+                             class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Roll area (m²)</label>
+                <InputNumber @bind-Value="calculation.RollArea"
+                             class="form-control" />
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Insulation thickness (mm)</label>
-            <InputNumber @bind-Value="calculation.InsulationThickness"
-                         class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Pipe length (m)</label>
-            <InputNumber @bind-Value="calculation.PipeLength"
-                         class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Roll area (m²)</label>
-            <InputNumber @bind-Value="calculation.RollArea"
-                         class="form-control" />
-        </div>
 
         <button class="btn btn-primary"
                 @onclick="Calculate">
@@ -62,28 +79,52 @@
             </div>
         }
 
+       
         @if (hasResult)
         {
-            <div class="lamella-result mt-4">
-                <h3>Calculation Results</h3>
+            <section class="lamella-result mt-4">
 
-                <p>
-                    Required area:
-                    <strong>@requiredArea m²</strong>
-                </p>
+                <div class="lamella-result-header">
+                    <div>
+                        <h2>Calculation results</h2>
+                        <p>Your estimated insulation requirements.</p>
+                    </div>
 
-                <p>
-                    Required rolls:
-                    <strong>@requiredRolls</strong>
-                </p>
+                    <span class="lamella-result-status">
+                        Calculated
+                    </span>
+                </div>
 
-                <button class="btn btn-primary mt-3"
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <div class="lamella-result-item">
+                            <span>Required area</span>
+                            <strong>@requiredArea m²</strong>
+                            <small>Insulation area</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="lamella-result-item">
+                            <span>Required rolls</span>
+                            <strong>@requiredRolls</strong>
+                            <small>Full rolls</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        class="lamella-add-button"
                         @onclick="AddMaterialItem">
-                    Add to Material List
+                    + Add to Material List
                 </button>
 
-            </div>
+            </section>
         }
+
+        
 
     </div>
 
@@ -91,11 +132,17 @@
 
     <section class="lamella-material-section mt-5">
 
+        
         <div class="lamella-material-header">
-            <div>
-                <h2>Your Material List</h2>
-                <p>Overview of your calculated lamella mats.</p>
+            <div class="lamella-material-heading">
+                <div class="lamella-material-icon">▤</div>
+
+                <div>
+                    <h2>Your material list</h2>
+                    <p>Everything you need, neatly organized.</p>
+                </div>
             </div>
+
 
             <span class="lamella-material-count">
                 @materialItems.Count materials
@@ -104,10 +151,12 @@
 
         @if (materialItems.Count == 0)
         {
+
             <div class="lamella-empty-state">
-                No materials added yet.
-                Calculate and add your first material above.
+                <h3>No materials yet</h3>
+                <p>Calculate your first lamella mat and add it here.</p>
             </div>
+
         }
         else
         {
