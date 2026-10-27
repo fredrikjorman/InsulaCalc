@@ -1,0 +1,128 @@
+﻿@page "/projects"
+@rendermode InteractiveServer
+
+@using InsulaCalc.Models
+@using InsulaCalc.Services
+@inject ProjectService ProjectService
+
+<PageTitle>My Projects - InsulaCalc</PageTitle>
+
+<div class="projects-page">
+
+    <header class="projects-header">
+        <div class="projects-eyebrow">
+            SMART INSULATION PLANNING
+        </div>
+
+        <h1>My Projects</h1>
+        <p>
+            Create, save and manage your insulation projects
+            in one place.
+        </p>
+    </header>
+
+    <section class="projects-card">
+        <div class="projects-card-heading">
+            <div class="projects-icon">+</div>
+            <div>
+                <h2>Create new project</h2>
+                <p>Start planning your next insulation project.</p>
+            </div>
+        </div>
+
+        <div class="projects-form">
+            <label for="projectName">Project name</label>
+            <input id="projectName"
+                   class="projects-input"
+                   placeholder="e.g. Stockholm Office Renovation"
+                   @bind="projectName" />
+
+            <label for="projectDescription">Description</label>
+            <textarea id="projectDescription"
+                      class="projects-input projects-textarea"
+                      placeholder="Add a short project description..."
+                      @bind="projectDescription">
+            </textarea>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <p class="projects-error">@errorMessage</p>
+            }
+
+            <button class="projects-save-button"
+                    @onclick="SaveProjectAsync">
+                + Save Project
+            </button>
+        </div>
+    </section>
+
+    <section class="projects-card projects-saved">
+        <div class="projects-saved-header">
+            <h2>Saved Projects</h2>
+            <span class="projects-count">
+                @projects.Count projects
+            </span>
+        </div>
+
+        @if (projects.Count == 0)
+        {
+            <div class="projects-empty">
+                <h3>No projects yet</h3>
+                <p>Create your first project to get started.</p>
+            </div>
+        }
+        else
+        {
+            <div class="projects-list">
+                @foreach (var project in projects)
+                {
+                    <div class="projects-list-item">
+                        <h3>@project.Name</h3>
+                        <p>@project.Description</p>
+                        <small>
+                            Created @project.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")
+                        </small>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+</div>
+
+@code {
+    private List<Project> projects = new();
+
+    private string projectName = string.Empty;
+    private string projectDescription = string.Empty;
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await ProjectService.GetAllProjectsAsync();
+    }
+
+    private async Task SaveProjectAsync()
+    {
+        errorMessage = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(projectName))
+        {
+            errorMessage = "Project name is required.";
+            return;
+        }
+
+        var project = new Project
+        {
+            Name = projectName.Trim(),
+            Description = projectDescription.Trim()
+        };
+
+        await ProjectService.SaveProjectAsync(project);
+
+        projects = await ProjectService.GetAllProjectsAsync();
+
+        projectName = string.Empty;
+        projectDescription = string.Empty;
+    }
+}
