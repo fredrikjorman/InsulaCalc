@@ -59,6 +59,7 @@
     justify-content: center;
     width: 46px;
     height: 46px;
+    flex-shrink: 0;
     background: #eaf2ff;
     color: #2563eb;
     border-radius: 14px;
@@ -126,7 +127,9 @@
     padding: 16px 28px;
     font-size: 15px;
     font-weight: 650;
+    font-family: inherit;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
     .projects-save-button:hover {
@@ -156,6 +159,7 @@
     border-radius: 30px;
     font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .projects-empty {
@@ -203,7 +207,22 @@
     }
 
     .projects-list-item small {
+        display: block;
         color: #94a3b8;
+        font-size: 13px;
+    }
+
+/* OPEN PROJECT BUTTON */
+
+.projects-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    margin-left: -8px;
+}
+
+    .projects-actions .projects-save-button {
+        margin: 0;
     }
 
 /* MOBILE */
@@ -223,5 +242,9 @@
 
     .projects-save-button {
         width: 100%;
+    }
+
+    .projects-actions {
+        margin-left: 0;
     }
 }

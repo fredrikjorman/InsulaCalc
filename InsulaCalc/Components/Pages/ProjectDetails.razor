@@ -1,0 +1,201 @@
+﻿@page "/projects/{Id:guid}"
+@rendermode InteractiveServer
+
+@using InsulaCalc.Models
+@using InsulaCalc.Services
+@inject ProjectService ProjectService
+@inject NavigationManager Navigation
+
+<PageTitle>Project Details - InsulaCalc</PageTitle>
+
+<div class="projects-page">
+
+    <header class="projects-header">
+        <div class="projects-eyebrow">
+            SMART INSULATION PLANNING
+        </div>
+
+        <h1>Project Details</h1>
+        <p>Manage your saved insulation project.</p>
+    </header>
+
+    @if (project == null)
+    {
+        <section class="projects-card">
+            <h2>Project not found</h2>
+            <p>The requested project could not be found.</p>
+            <button class="projects-save-button"
+                    @onclick="BackToProjects">
+                Back to Projects
+            </button>
+        </section>
+    }
+    else
+    {
+        <section class="projects-card">
+
+            <div class="projects-card-heading">
+                <div class="projects-icon">✎</div>
+                <div>
+                    <h2>Edit project</h2>
+                    <p>Update your project information.</p>
+                </div>
+            </div>
+
+            <div class="projects-form">
+
+                <label for="editName">Project name</label>
+                <input id="editName"
+                       class="projects-input"
+                       @bind="projectName" />
+
+                <label for="editDescription">Description</label>
+                <textarea id="editDescription"
+                          class="projects-input projects-textarea"
+                          @bind="projectDescription">
+                </textarea>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <p class="projects-error">@errorMessage</p>
+                }
+
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <p class="project-success">@successMessage</p>
+                }
+
+                <div class="project-detail-actions">
+                    <button class="projects-save-button"
+                            @onclick="UpdateProjectAsync">
+                        Save Changes
+                    </button>
+
+                    <button class="project-secondary-button"
+                            @onclick="BackToProjects">
+                        Back to Projects
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="projects-card">
+            <h2>Project information</h2>
+
+            <p class="project-info">
+                Created:
+                @project.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")
+            </p>
+
+            <p class="project-info">
+                Last updated:
+                @project.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd")
+            </p>
+        </section>
+
+        <section class="projects-card">
+            <h2>Delete project</h2>
+            <p class="project-info">
+                Permanently remove this project.
+            </p>
+
+            @if (!showDeleteConfirmation)
+            {
+                <button class="project-delete-button"
+                        @onclick="() => showDeleteConfirmation = true">
+                    Delete Project
+                </button>
+            }
+            else
+            {
+                <p class="projects-error">
+                    Are you sure? This action cannot be undone.
+                </p>
+
+                <div class="project-detail-actions">
+                    <button class="project-delete-button"
+                            @onclick="DeleteProjectAsync">
+                        Yes, Delete Project
+                    </button>
+
+                    <button class="project-secondary-button"
+                            @onclick="() => showDeleteConfirmation = false">
+                        Cancel
+                    </button>
+                </div>
+            }
+        </section>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private Project? project;
+
+    private string projectName = string.Empty;
+    private string projectDescription = string.Empty;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+
+    private bool showDeleteConfirmation;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        project = await ProjectService.GetProjectByIdAsync(Id);
+
+        if (project != null)
+        {
+            projectName = project.Name;
+            projectDescription = project.Description;
+        }
+    }
+
+    private async Task UpdateProjectAsync()
+    {
+        if (project == null)
+            return;
+
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(projectName))
+        {
+            errorMessage = "Project name is required.";
+            return;
+        }
+
+        project.Name = projectName.Trim();
+        project.Description = projectDescription.Trim();
+        project.UpdatedAt = DateTime.UtcNow;
+
+        await ProjectService.SaveProjectAsync(project);
+
+        successMessage = "Project updated successfully.";
+    }
+
+    private async Task DeleteProjectAsync()
+    {
+        if (project == null)
+            return;
+
+        bool deleted = await ProjectService.DeleteProjectAsync(project.Id);
+
+        if (deleted)
+        {
+            Navigation.NavigateTo("/projects");
+        }
+        else
+        {
+            errorMessage = "Could not delete the project.";
+        }
+    }
+
+    private void BackToProjects()
+    {
+        Navigation.NavigateTo("/projects");
+    }
+}

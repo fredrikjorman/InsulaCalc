@@ -4,6 +4,7 @@
 @using InsulaCalc.Models
 @using InsulaCalc.Services
 @inject ProjectService ProjectService
+@inject NavigationManager Navigation
 
 <PageTitle>My Projects - InsulaCalc</PageTitle>
 
@@ -31,6 +32,7 @@
         </div>
 
         <div class="projects-form">
+
             <label for="projectName">Project name</label>
             <input id="projectName"
                    class="projects-input"
@@ -57,8 +59,10 @@
     </section>
 
     <section class="projects-card projects-saved">
+
         <div class="projects-saved-header">
             <h2>Saved Projects</h2>
+
             <span class="projects-count">
                 @projects.Count projects
             </span>
@@ -74,18 +78,31 @@
         else
         {
             <div class="projects-list">
+
                 @foreach (var project in projects)
                 {
                     <div class="projects-list-item">
+
                         <h3>@project.Name</h3>
                         <p>@project.Description</p>
+
                         <small>
-                            Created @project.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")
+                            Updated @project.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd")
                         </small>
+
+                        <div class="projects-actions">
+                            <button class="projects-save-button"
+                                    @onclick="() => OpenProject(project.Id)">
+                                Open Project
+                            </button>
+                        </div>
+
                     </div>
                 }
+
             </div>
         }
+
     </section>
 
 </div>
@@ -124,5 +141,10 @@
 
         projectName = string.Empty;
         projectDescription = string.Empty;
+    }
+
+    private void OpenProject(Guid id)
+    {
+        Navigation.NavigateTo($"/projects/{id}");
     }
 }
