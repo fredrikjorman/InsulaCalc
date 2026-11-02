@@ -7,6 +7,7 @@
 @using System.Globalization
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
+@inject ProjectService ProjectService
 
 
 <PageTitle>Lamella Mats | InsulaCalc</PageTitle>
@@ -208,6 +209,45 @@
             </button>
         }
 
+        @if (materialItems.Count > 0)
+        {
+            <div class="lamella-save-project-panel">
+                <h3>Save to Project</h3>
+                <p>Save all lamella mat materials in this list to an existing project.</p>
+
+                @if (availableProjects.Count == 0)
+                {
+                    <p>No projects available. Create a project under My Projects first.</p>
+                }
+                else
+                {
+                    <label for="lamellaProjectSelect">Select project</label>
+                    <select id="lamellaProjectSelect" class="form-control"
+                            @bind="selectedProjectId">
+                        <option value="@Guid.Empty">Choose a project</option>
+                        @foreach (var savedProject in availableProjects)
+                        {
+                            <option value="@savedProject.Id">@savedProject.Name</option>
+                        }
+                    </select>
+                    <button type="button" class="btn btn-primary"
+                            disabled="@isSavingProject"
+                            @onclick="SaveMaterialsToProjectAsync">
+                        @(isSavingProject ? "Saving..." : "Save to Project")
+                    </button>
+                }
+
+                @if (!string.IsNullOrEmpty(projectSaveError))
+                {
+                    <p class="text-danger mt-2" role="alert">@projectSaveError</p>
+                }
+                @if (!string.IsNullOrEmpty(projectSaveSuccess))
+                {
+                    <p class="text-success mt-2" role="status">@projectSaveSuccess</p>
+                }
+            </div>
+        }
+
         <div class="lamella-material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -256,6 +296,74 @@
 
 
 @code {
+    private List<Project> availableProjects = new();
+    private Guid selectedProjectId = Guid.Empty;
+    private bool isSavingProject;
+    private string projectSaveError = string.Empty;
+    private string projectSaveSuccess = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableProjects = await ProjectService.GetAllProjectsAsync();
+    }
+
+    private async Task SaveMaterialsToProjectAsync()
+    {
+        projectSaveError = string.Empty;
+        projectSaveSuccess = string.Empty;
+
+        if (isSavingProject) return;
+        if (selectedProjectId == Guid.Empty)
+        {
+            projectSaveError = "Please select a project.";
+            return;
+        }
+        if (materialItems.Count == 0)
+        {
+            projectSaveError = "Add materials to the list first.";
+            return;
+        }
+
+        isSavingProject = true;
+        try
+        {
+            var target = await ProjectService.GetProjectByIdAsync(selectedProjectId);
+            if (target is null)
+            {
+                projectSaveError = "Project not found. Please refresh and try again.";
+                return;
+            }
+
+            target.Materials ??= new List<ProjectMaterial>();
+            foreach (var item in materialItems)
+            {
+                target.Materials.Add(new ProjectMaterial
+                {
+                    MaterialType = "Lamella Mats",
+                    Description = $"Lamella mat {item.PipeDiameter}/{item.InsulationThickness} · " +
+                                  $"{item.RequiredArea.ToString(CultureInfo.InvariantCulture)} m² required area · " +
+                                  $"{item.RollArea.ToString(CultureInfo.InvariantCulture)} m² per roll",
+                    Diameter = item.PipeDiameter,
+                    Thickness = item.InsulationThickness,
+                    Length = (double)item.PipeLength,
+                    Rolls = item.RequiredRolls
+                });
+            }
+
+            target.UpdatedAt = DateTime.UtcNow;
+            await ProjectService.SaveProjectAsync(target);
+            projectSaveSuccess = $"Saved {materialItems.Count} material(s) to {target.Name}.";
+        }
+        catch (Exception)
+        {
+            projectSaveError = "Could not save materials. Please try again.";
+        }
+        finally
+        {
+            isSavingProject = false;
+        }
+    }
+
     private LamellaMatCalculation calculation = new();
 
     private LamellaMatCalculator calculator = new();
@@ -329,6 +437,8 @@
         };
 
         materialItems.Add(item);
+        projectSaveSuccess = string.Empty;
+        projectSaveError = string.Empty;
 
         hasResult = false;
         errorMessage = null;
@@ -341,6 +451,7 @@
         if (item != null)
         {
             materialItems.Remove(item);
+            projectSaveSuccess = string.Empty;
         }
     }
 

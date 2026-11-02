@@ -564,4 +564,61 @@
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
+/* Save to Project */
+.lamella-save-project-panel {
+    margin-top: 28px;
+    padding: 28px;
+    background: #f8fbff;
+    border: 1px solid #dbe5f3;
+    border-radius: 16px;
+}
+
+    .lamella-save-project-panel h3 {
+        color: #172b4d;
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .lamella-save-project-panel p {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .lamella-save-project-panel label {
+        display: block;
+        color: #172b4d;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .lamella-save-project-panel select {
+        max-width: 450px;
+        margin-bottom: 16px;
+    }
+
+    .lamella-save-project-panel .btn {
+        display: block;
+        padding: 12px 24px;
+        border-radius: 10px;
+    }
+
+    .lamella-save-project-panel .text-success {
+        color: #15803d !important;
+    }
+
+    .lamella-save-project-panel .text-danger {
+        color: #dc2626 !important;
+    }
+
+@media (max-width: 767px) {
+    .lamella-save-project-panel {
+        padding: 20px;
+    }
+
+        .lamella-save-project-panel .btn {
+            width: 100%;
+        }
+}
 
