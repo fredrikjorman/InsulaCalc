@@ -461,6 +461,8 @@
         };
 
         materialItems.Add(item);
+        projectSaveSuccess = string.Empty;
+        projectSaveError = string.Empty;
 
         errorMessage = "";
         hasResult = false;
@@ -474,6 +476,8 @@
         if (item != null)
         {
             materialItems.Remove(item);
+            projectSaveSuccess = string.Empty;
+            projectSaveError = string.Empty;
         }
     }
 
