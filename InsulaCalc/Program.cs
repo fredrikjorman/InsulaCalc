@@ -1,5 +1,6 @@
 using InsulaCalc.Components;
 using InsulaCalc.Services;
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<ProjectService>();
+builder.Services.AddScoped<ProjectPdfService>();
 
 var app = builder.Build();
 

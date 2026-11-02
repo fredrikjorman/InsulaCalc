@@ -3,7 +3,10 @@
 
 @using InsulaCalc.Models
 @using InsulaCalc.Services
+@using Microsoft.JSInterop
 @inject ProjectService ProjectService
+@inject ProjectPdfService ProjectPdfService
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 
 <PageTitle>Project Details - InsulaCalc</PageTitle>
@@ -81,6 +84,19 @@
                 </div>
             </div>
         </section>
+
+        <div class="project-detail-actions mb-4">
+            <button type="button" class="projects-save-button"
+                    @onclick="ExportProjectPdfAsync"
+                    disabled="@isExportingPdf">
+                @(isExportingPdf ? "Generating PDF..." : "Export to PDF")
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(pdfError))
+        {
+            <p class="projects-error">@pdfError</p>
+        }
 
         <!-- PROJECT SUMMARY -->
 
@@ -389,6 +405,8 @@
     public Guid Id { get; set; }
 
     private Project? project;
+    private bool isExportingPdf;
+    private string pdfError = string.Empty;
 
     private string projectName = string.Empty;
     private string projectDescription = string.Empty;
@@ -560,6 +578,35 @@
         else
         {
             errorMessage = "Could not delete the project.";
+        }
+    }
+
+    private async Task ExportProjectPdfAsync()
+    {
+        if (project == null || isExportingPdf)
+            return;
+
+        pdfError = string.Empty;
+        isExportingPdf = true;
+
+        try
+        {
+            var pdfBytes = ProjectPdfService.GeneratePdf(project);
+            using var stream = new MemoryStream(pdfBytes);
+            using var streamReference = new DotNetStreamReference(stream);
+
+            await JS.InvokeVoidAsync(
+                "downloadFileFromStream",
+                "InsulaCalc-Project-Report.pdf",
+                streamReference);
+        }
+        catch (Exception)
+        {
+            pdfError = "Could not generate the PDF report. Please try again.";
+        }
+        finally
+        {
+            isExportingPdf = false;
         }
     }
 
