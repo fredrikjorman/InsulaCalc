@@ -82,6 +82,58 @@
             </div>
         </section>
 
+        <!-- PROJECT SUMMARY -->
+
+        <section class="projects-card project-overview-section">
+            <div class="projects-card-heading">
+                <div class="projects-icon">▤</div>
+                <div>
+                    <h2>Project Summary</h2>
+                    <p>Combined insulation requirements for this project.</p>
+                </div>
+            </div>
+
+            <div class="project-overview-grid">
+                <div class="project-overview-stat">
+                    <span>Materials</span>
+                    <strong>@ProjectMaterialCount</strong>
+                </div>
+                <div class="project-overview-stat">
+                    <span>Total length</span>
+                    <strong>@TotalMaterialLength.ToString("0.##") m</strong>
+                </div>
+                <div class="project-overview-stat">
+                    <span>Full packages</span>
+                    <strong>@TotalMaterialPackages</strong>
+                </div>
+                <div class="project-overview-stat">
+                    <span>Loose sections</span>
+                    <strong>@TotalMaterialLooseSections</strong>
+                </div>
+                <div class="project-overview-stat">
+                    <span>Rolls</span>
+                    <strong>@TotalMaterialRolls</strong>
+                </div>
+            </div>
+
+            @if (ProjectMaterialCount > 0)
+            {
+                <div class="project-type-summary">
+                    @foreach (var group in MaterialGroups)
+                    {
+                        <div class="project-type-summary-row" @key="group.Key">
+                            <span>@group.Key</span>
+                            <strong>@group.Count() material(s)</strong>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="project-overview-empty">Add materials from a calculator to see your project totals.</p>
+            }
+        </section>
+
         <!-- PROJECT MATERIALS -->
 
         <section class="projects-card">
@@ -105,64 +157,51 @@
             else
             {
                 <div class="materials-list">
-
-                    @foreach (var material in project.Materials)
+                    @foreach (var group in MaterialGroups)
                     {
-                        <div class="material-item"
-                             @key="material.Id">
-
-                            <div class="material-content">
-                                <span class="material-type">
-                                    @material.MaterialType
-                                </span>
-
-                                <h3>@material.Description</h3>
-
-                                <p>
-                                    Length: @material.Length m
-                                </p>
-
-                                @if (material.Diameter > 0)
-                                {
-                                    <p>
-                                        Diameter: @material.Diameter mm
-                                    </p>
-                                }
-
-                                @if (material.Thickness > 0)
-                                {
-                                    <p>
-                                        Thickness: @material.Thickness mm
-                                    </p>
-                                }
-
-                                @if (material.Packages > 0)
-                                {
-                                    <p>
-                                        Packages: @material.Packages
-                                    </p>
-                                }
-
-                                @if (material.LooseSections > 0)
-                                {
-                                    <p>
-                                        Loose sections:
-                                        @material.LooseSections
-                                    </p>
-                                }
-
-                                @if (material.Rolls > 0)
-                                {
-                                    <p>
-                                        Rolls: @material.Rolls
-                                    </p>
-                                }
+                        <div class="project-material-group" @key="group.Key">
+                            <div class="project-material-group-heading">
+                                <h3>@group.Key</h3>
+                                <span>@group.Count() material(s)</span>
                             </div>
 
-                            <button class="material-remove-button"
-                                    @onclick="() => RemoveMaterialAsync(material.Id)">
-                                Remove
-                            </button>
+                            @foreach (var material in group)
+                            {
+                                <div class="material-item" @key="material.Id">
+                                    <div class="material-content">
+                                        <span class="material-type">@material.MaterialType</span>
+                                        <h3>@material.Description</h3>
+                                        <p>Length: @material.Length.ToString("0.##") m</p>
+
+                                        @if (material.Diameter > 0)
+                                        {
+                                            <p>Diameter: @material.Diameter mm</p>
+                                        }
+                                        @if (material.Thickness > 0)
+                                        {
+                                            <p>Thickness: @material.Thickness mm</p>
+                                        }
+                                        @if (material.Packages > 0)
+                                        {
+                                            <p>Packages: @material.Packages</p>
+                                        }
+                                        @if (material.LooseSections > 0)
+                                        {
+                                            <p>Loose sections: @material.LooseSections</p>
+                                        }
+                                        @if (material.Rolls > 0)
+                                        {
+                                            <p>Rolls: @material.Rolls</p>
+                                        }
+                                    </div>
+
+                                    <button type="button"
+                                            class="material-remove-button"
+                                            @onclick="() => RemoveMaterialAsync(material.Id)">
+                                        Remove
+                                    </button>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -355,6 +394,24 @@
     private string projectDescription = string.Empty;
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
+
+    private IEnumerable<IGrouping<string, ProjectMaterial>> MaterialGroups =>
+        (project?.Materials ?? new List<ProjectMaterial>())
+            .GroupBy(m => string.IsNullOrWhiteSpace(m.MaterialType) ? "Other" : m.MaterialType)
+            .OrderBy(g => g.Key switch
+            {
+                "Pipe Sections" => 0,
+                "Wired Mats" => 1,
+                "Lamella Mats" => 2,
+                _ => 3
+            })
+            .ThenBy(g => g.Key);
+
+    private int ProjectMaterialCount => project?.Materials?.Count ?? 0;
+    private double TotalMaterialLength => project?.Materials?.Sum(m => m.Length) ?? 0;
+    private int TotalMaterialPackages => project?.Materials?.Sum(m => m.Packages) ?? 0;
+    private int TotalMaterialLooseSections => project?.Materials?.Sum(m => m.LooseSections) ?? 0;
+    private int TotalMaterialRolls => project?.Materials?.Sum(m => m.Rolls) ?? 0;
 
     private bool showDeleteConfirmation;
 
