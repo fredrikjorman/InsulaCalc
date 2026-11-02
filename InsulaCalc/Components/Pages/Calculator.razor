@@ -4,6 +4,7 @@
 
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
+@inject ProjectService ProjectService
 @using System.Text
 @using InsulaCalc.Services
 @using InsulaCalc.Models
@@ -241,6 +242,45 @@
         }
 
 
+        @if (materialItems.Count > 0)
+        {
+            <div class="save-project-panel">
+                <h3>Save to Project</h3>
+                <p>Save all materials in this list to an existing project.</p>
+
+                @if (savedProjects.Count == 0)
+                {
+                    <p>No saved projects found. Create a project on the Projects page first.</p>
+                }
+                else
+                {
+                    <label for="targetProject">Select project</label>
+                    <select id="targetProject" class="form-control calculator-input"
+                            @bind="selectedProjectId">
+                        <option value="">Choose a project</option>
+                        @foreach (var savedProject in savedProjects)
+                        {
+                            <option value="@savedProject.Id">@savedProject.Name</option>
+                        }
+                    </select>
+                    <button type="button" class="calculate-button"
+                            disabled="@isSavingProject"
+                            @onclick="SaveMaterialsToProjectAsync">
+                        @(isSavingProject ? "Saving..." : "Save to Project")
+                    </button>
+                }
+
+                @if (!string.IsNullOrEmpty(projectSaveError))
+                {
+                    <p role="alert" class="text-danger mt-2">@projectSaveError</p>
+                }
+                @if (!string.IsNullOrEmpty(projectSaveSuccess))
+                {
+                    <p role="status" class="text-success mt-2">@projectSaveSuccess</p>
+                }
+            </div>
+        }
+
         <div class="material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -311,6 +351,18 @@
 
     private List<MaterialItem> materialItems = new();
 
+    private List<Project> savedProjects = new();
+    private string selectedProjectId = string.Empty;
+    private string projectSaveError = string.Empty;
+    private string projectSaveSuccess = string.Empty;
+    private bool isSavingProject;
+
+    protected override async Task OnInitializedAsync()
+    {
+        savedProjects = await ProjectService.GetAllProjectsAsync();
+    }
+
+
     private int calculatedDiameter;
     private int calculatedThickness;
     private decimal calculatedLength;
@@ -380,6 +432,7 @@
         };
 
         materialItems.Add(item);
+        projectSaveSuccess = string.Empty;
         errorMessage = "";
     }
 
@@ -390,6 +443,62 @@
         if (item != null)
         {
             materialItems.Remove(item);
+            projectSaveSuccess = string.Empty;
+        }
+    }
+
+    private async Task SaveMaterialsToProjectAsync()
+    {
+        projectSaveError = string.Empty;
+        projectSaveSuccess = string.Empty;
+
+        if (isSavingProject || materialItems.Count == 0)
+            return;
+
+        if (!Guid.TryParse(selectedProjectId, out var projectId))
+        {
+            projectSaveError = "Please select a project.";
+            return;
+        }
+
+        isSavingProject = true;
+        try
+        {
+            var target = await ProjectService.GetProjectByIdAsync(projectId);
+            if (target == null)
+            {
+                projectSaveError = "Project not found. Please refresh the page.";
+                return;
+            }
+
+            target.Materials ??= new List<ProjectMaterial>();
+
+            foreach (var item in materialItems)
+            {
+                target.Materials.Add(new ProjectMaterial
+                {
+                    MaterialType = "Pipe Sections",
+                    Description = $"Pipe {item.Diameter}/{item.InsulationThickness}",
+                    Length = (double)item.RequiredLength,
+                    Diameter = item.Diameter,
+                    Thickness = item.InsulationThickness,
+                    Packages = item.FullPackages,
+                    LooseSections = item.LooseSections
+                });
+            }
+
+            target.UpdatedAt = DateTime.UtcNow;
+            await ProjectService.SaveProjectAsync(target);
+
+            projectSaveSuccess = $"Saved {materialItems.Count} material(s) to {target.Name}.";
+        }
+        catch (Exception)
+        {
+            projectSaveError = "Could not save materials. Please try again.";
+        }
+        finally
+        {
+            isSavingProject = false;
         }
     }
 

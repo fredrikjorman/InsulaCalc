@@ -6,6 +6,7 @@
 @using System.Globalization
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
+@inject ProjectService ProjectService
 
 
 <PageTitle>Wired Mats Calculator</PageTitle>
@@ -220,6 +221,48 @@
             </button>
         }
 
+        @if (materialItems.Count > 0)
+        {
+            <div class="wired-save-project-panel">
+                <h3>Save to Project</h3>
+                <p>Save your wired mat material list to an existing project.</p>
+
+                @if (availableProjects.Count == 0)
+                {
+                    <p>No projects available. Create a project under My Projects first.</p>
+                }
+                else
+                {
+                    <label for="wiredProjectSelect">Select project</label>
+                    <select id="wiredProjectSelect"
+                            class="form-control wired-input"
+                            @bind="selectedProjectId">
+                        <option value="@Guid.Empty">Choose a project</option>
+                        @foreach (var savedProject in availableProjects)
+                        {
+                            <option value="@savedProject.Id">@savedProject.Name</option>
+                        }
+                    </select>
+
+                    <button type="button"
+                            class="wired-save-project-button"
+                            disabled="@isSavingProject"
+                            @onclick="SaveMaterialsToProjectAsync">
+                        @(isSavingProject ? "Saving..." : "Save to Project")
+                    </button>
+                }
+
+                @if (!string.IsNullOrEmpty(projectSaveError))
+                {
+                    <p class="wired-save-error" role="alert">@projectSaveError</p>
+                }
+                @if (!string.IsNullOrEmpty(projectSaveSuccess))
+                {
+                    <p class="wired-save-success" role="status">@projectSaveSuccess</p>
+                }
+            </div>
+        }
+
         <div class="wired-material-footer">
             <span>Smart insulation planning</span>
             <span>InsulaCalc</span>
@@ -267,6 +310,75 @@
 </div>
 
 @code {
+    private List<Project> availableProjects = new();
+    private Guid selectedProjectId = Guid.Empty;
+    private bool isSavingProject;
+    private string projectSaveError = string.Empty;
+    private string projectSaveSuccess = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableProjects = (await ProjectService.GetAllProjectsAsync()).ToList();
+    }
+
+    private async Task SaveMaterialsToProjectAsync()
+    {
+        projectSaveError = string.Empty;
+        projectSaveSuccess = string.Empty;
+
+        if (isSavingProject) return;
+        if (selectedProjectId == Guid.Empty)
+        {
+            projectSaveError = "Please select a project.";
+            return;
+        }
+        if (materialItems.Count == 0)
+        {
+            projectSaveError = "Add materials to the list first.";
+            return;
+        }
+
+        isSavingProject = true;
+        try
+        {
+            // Load the latest version to preserve previously saved project materials.
+            var target = await ProjectService.GetProjectByIdAsync(selectedProjectId);
+            if (target == null)
+            {
+                projectSaveError = "Project not found. Please refresh and try again.";
+                return;
+            }
+
+            target.Materials ??= new List<ProjectMaterial>();
+            foreach (var item in materialItems)
+            {
+                target.Materials.Add(new ProjectMaterial
+                {
+                    MaterialType = "Wired Mats",
+                    Description = $"Wired mat {item.PipeDiameter}/{item.InsulationThickness} · " +
+                                  $"{item.RequiredArea.ToString(CultureInfo.InvariantCulture)} m² required area · " +
+                                  $"{item.RollArea.ToString(CultureInfo.InvariantCulture)} m² per roll",
+                    Diameter = item.PipeDiameter,
+                    Thickness = item.InsulationThickness,
+                    Length = (double)item.PipeLength,
+                    Rolls = item.RequiredRolls
+                });
+            }
+
+            target.UpdatedAt = DateTime.UtcNow;
+            await ProjectService.SaveProjectAsync(target);
+            projectSaveSuccess = $"Saved {materialItems.Count} material(s) to {target.Name}.";
+        }
+        catch (Exception)
+        {
+            projectSaveError = "Could not save materials. Please try again.";
+        }
+        finally
+        {
+            isSavingProject = false;
+        }
+    }
+
     private int pipeDiameter;
     private int insulationThickness;
     private decimal pipeLength;

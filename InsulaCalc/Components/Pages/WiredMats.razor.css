@@ -712,5 +712,85 @@
     border-radius: 30px;
 }
 
+/* SAVE TO PROJECT */
+
+.wired-save-project-panel {
+    margin-top: 32px;
+    padding: 28px;
+    background: #f8fbff;
+    border: 1px solid #dbe5f3;
+    border-radius: 16px;
+}
+
+    .wired-save-project-panel h3 {
+        color: #172b4d;
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .wired-save-project-panel p {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .wired-save-project-panel label {
+        display: block;
+        color: #172b4d;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .wired-save-project-panel select {
+        width: 100%;
+        max-width: 450px;
+        margin-bottom: 18px;
+    }
+
+.wired-save-project-button {
+    display: block;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 28px;
+    font-size: 15px;
+    font-weight: 650;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+    .wired-save-project-button:hover {
+        background: #1d4ed8;
+    }
+
+    .wired-save-project-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.wired-save-error {
+    color: #dc2626 !important;
+    margin-top: 16px;
+}
+
+.wired-save-success {
+    color: #15803d !important;
+    margin-top: 16px;
+}
+
+@media (max-width: 767px) {
+    .wired-save-project-panel {
+        padding: 20px;
+    }
+
+    .wired-save-project-button {
+        width: 100%;
+    }
+}
+
+
 
 

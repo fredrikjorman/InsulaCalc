@@ -16,7 +16,7 @@
         </div>
 
         <h1>Project Details</h1>
-        <p>Manage your saved insulation project.</p>
+        <p>Manage your project and insulation materials.</p>
     </header>
 
     @if (project == null)
@@ -24,6 +24,7 @@
         <section class="projects-card">
             <h2>Project not found</h2>
             <p>The requested project could not be found.</p>
+
             <button class="projects-save-button"
                     @onclick="BackToProjects">
                 Back to Projects
@@ -32,6 +33,8 @@
     }
     else
     {
+        <!-- EDIT PROJECT -->
+
         <section class="projects-card">
 
             <div class="projects-card-heading">
@@ -77,8 +80,218 @@
                     </button>
                 </div>
             </div>
+        </section>
+
+        <!-- PROJECT MATERIALS -->
+
+        <section class="projects-card">
+
+            <div class="projects-card-heading">
+                <div class="projects-icon">▤</div>
+                <div>
+                    <h2>Project Materials</h2>
+                    <p>Materials saved to this project.</p>
+                </div>
+            </div>
+
+            @if (project.Materials == null ||
+                 project.Materials.Count == 0)
+            {
+                <div class="materials-empty">
+                    <h3>No materials added yet</h3>
+                    <p>Add your first insulation material below.</p>
+                </div>
+            }
+            else
+            {
+                <div class="materials-list">
+
+                    @foreach (var material in project.Materials)
+                    {
+                        <div class="material-item"
+                             @key="material.Id">
+
+                            <div class="material-content">
+                                <span class="material-type">
+                                    @material.MaterialType
+                                </span>
+
+                                <h3>@material.Description</h3>
+
+                                <p>
+                                    Length: @material.Length m
+                                </p>
+
+                                @if (material.Diameter > 0)
+                                {
+                                    <p>
+                                        Diameter: @material.Diameter mm
+                                    </p>
+                                }
+
+                                @if (material.Thickness > 0)
+                                {
+                                    <p>
+                                        Thickness: @material.Thickness mm
+                                    </p>
+                                }
+
+                                @if (material.Packages > 0)
+                                {
+                                    <p>
+                                        Packages: @material.Packages
+                                    </p>
+                                }
+
+                                @if (material.LooseSections > 0)
+                                {
+                                    <p>
+                                        Loose sections:
+                                        @material.LooseSections
+                                    </p>
+                                }
+
+                                @if (material.Rolls > 0)
+                                {
+                                    <p>
+                                        Rolls: @material.Rolls
+                                    </p>
+                                }
+                            </div>
+
+                            <button class="material-remove-button"
+                                    @onclick="() => RemoveMaterialAsync(material.Id)">
+                                Remove
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
 
         </section>
+
+        <!-- ADD MATERIAL -->
+
+        <section class="projects-card">
+
+            <div class="projects-card-heading">
+                <div class="projects-icon">+</div>
+                <div>
+                    <h2>Add Material</h2>
+                    <p>Add insulation material to your project.</p>
+                </div>
+            </div>
+
+            <div class="projects-form">
+
+                <label for="materialType">Material type</label>
+
+                <select id="materialType"
+                        class="projects-input"
+                        @bind="materialType">
+
+                    <option value="Pipe Sections">
+                        Pipe Sections
+                    </option>
+
+                    <option value="Wired Mats">
+                        Wired Mats
+                    </option>
+
+                    <option value="Lamella Mats">
+                        Lamella Mats
+                    </option>
+                </select>
+
+                <label for="materialDescription">
+                    Description
+                </label>
+
+                <input id="materialDescription"
+                       class="projects-input"
+                       placeholder="e.g. Paroc 114/30"
+                       @bind="materialDescription" />
+
+                <label for="materialLength">
+                    Length (m)
+                </label>
+
+                <input id="materialLength"
+                       type="number"
+                       min="0"
+                       step="any"
+                       class="projects-input"
+                       @bind="materialLength" />
+
+                <label for="materialDiameter">
+                    Diameter (mm)
+                </label>
+
+                <input id="materialDiameter"
+                       type="number"
+                       min="0"
+                       class="projects-input"
+                       @bind="materialDiameter" />
+
+                <label for="materialThickness">
+                    Thickness (mm)
+                </label>
+
+                <input id="materialThickness"
+                       type="number"
+                       min="0"
+                       class="projects-input"
+                       @bind="materialThickness" />
+
+                <label for="materialPackages">
+                    Packages
+                </label>
+
+                <input id="materialPackages"
+                       type="number"
+                       min="0"
+                       class="projects-input"
+                       @bind="materialPackages" />
+
+                <label for="materialLooseSections">
+                    Loose sections
+                </label>
+
+                <input id="materialLooseSections"
+                       type="number"
+                       min="0"
+                       class="projects-input"
+                       @bind="materialLooseSections" />
+
+                <label for="materialRolls">
+                    Rolls
+                </label>
+
+                <input id="materialRolls"
+                       type="number"
+                       min="0"
+                       class="projects-input"
+                       @bind="materialRolls" />
+
+                @if (!string.IsNullOrEmpty(materialError))
+                {
+                    <p class="projects-error">@materialError</p>
+                }
+
+                @if (!string.IsNullOrEmpty(materialSuccess))
+                {
+                    <p class="project-success">@materialSuccess</p>
+                }
+
+                <button class="projects-save-button"
+                        @onclick="AddMaterialAsync">
+                    Add Material
+                </button>
+            </div>
+
+        </section>
+
+        <!-- PROJECT INFORMATION -->
 
         <section class="projects-card">
             <h2>Project information</h2>
@@ -94,8 +307,11 @@
             </p>
         </section>
 
+        <!-- DELETE PROJECT -->
+
         <section class="projects-card">
             <h2>Delete project</h2>
+
             <p class="project-info">
                 Permanently remove this project.
             </p>
@@ -127,7 +343,6 @@
             }
         </section>
     }
-
 </div>
 
 @code {
@@ -143,6 +358,19 @@
 
     private bool showDeleteConfirmation;
 
+    private string materialType = "Pipe Sections";
+    private string materialDescription = string.Empty;
+
+    private double materialLength;
+    private int materialDiameter;
+    private int materialThickness;
+    private int materialPackages;
+    private int materialLooseSections;
+    private int materialRolls;
+
+    private string materialError = string.Empty;
+    private string materialSuccess = string.Empty;
+
     protected override async Task OnParametersSetAsync()
     {
         project = await ProjectService.GetProjectByIdAsync(Id);
@@ -151,6 +379,8 @@
         {
             projectName = project.Name;
             projectDescription = project.Description;
+
+            project.Materials ??= new List<ProjectMaterial>();
         }
     }
 
@@ -177,12 +407,94 @@
         successMessage = "Project updated successfully.";
     }
 
+    private async Task AddMaterialAsync()
+    {
+        if (project == null)
+            return;
+
+        materialError = string.Empty;
+        materialSuccess = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(materialDescription))
+        {
+            materialError = "Material description is required.";
+            return;
+        }
+
+        if (materialLength <= 0 ||
+            !double.IsFinite(materialLength))
+        {
+            materialError = "Length must be greater than zero.";
+            return;
+        }
+
+        if (materialDiameter < 0 ||
+            materialThickness < 0 ||
+            materialPackages < 0 ||
+            materialLooseSections < 0 ||
+            materialRolls < 0)
+        {
+            materialError = "Quantities cannot be negative.";
+            return;
+        }
+
+        var material = new ProjectMaterial
+        {
+            MaterialType = materialType,
+            Description = materialDescription.Trim(),
+            Length = materialLength,
+            Diameter = materialDiameter,
+            Thickness = materialThickness,
+            Packages = materialPackages,
+            LooseSections = materialLooseSections,
+            Rolls = materialRolls
+        };
+
+        project.Materials ??= new List<ProjectMaterial>();
+        project.Materials.Add(material);
+
+        project.UpdatedAt = DateTime.UtcNow;
+
+        await ProjectService.SaveProjectAsync(project);
+
+        materialDescription = string.Empty;
+        materialLength = 0;
+        materialDiameter = 0;
+        materialThickness = 0;
+        materialPackages = 0;
+        materialLooseSections = 0;
+        materialRolls = 0;
+
+        materialSuccess = "Material added successfully.";
+    }
+
+    private async Task RemoveMaterialAsync(Guid materialId)
+    {
+        if (project == null)
+            return;
+
+        var material = project.Materials?
+            .FirstOrDefault(m => m.Id == materialId);
+
+        if (material == null)
+            return;
+
+        project.Materials!.Remove(material);
+        project.UpdatedAt = DateTime.UtcNow;
+
+        await ProjectService.SaveProjectAsync(project);
+
+        materialError = string.Empty;
+        materialSuccess = "Material removed successfully.";
+    }
+
     private async Task DeleteProjectAsync()
     {
         if (project == null)
             return;
 
-        bool deleted = await ProjectService.DeleteProjectAsync(project.Id);
+        bool deleted =
+            await ProjectService.DeleteProjectAsync(project.Id);
 
         if (deleted)
         {

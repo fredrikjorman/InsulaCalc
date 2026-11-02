@@ -70,6 +70,7 @@ public class ProjectService
         return projects.FirstOrDefault(p => p.Id == id);
     }
 
+
     public async Task SaveProjectAsync(Project project)
     {
         await _fileLock.WaitAsync();
@@ -88,6 +89,7 @@ public class ProjectService
             {
                 existing.Name = project.Name;
                 existing.Description = project.Description;
+                existing.Materials = project.Materials;
                 existing.UpdatedAt = DateTime.UtcNow;
             }
 
@@ -98,6 +100,7 @@ public class ProjectService
             _fileLock.Release();
         }
     }
+
 
     public async Task<bool> DeleteProjectAsync(Guid id)
     {
