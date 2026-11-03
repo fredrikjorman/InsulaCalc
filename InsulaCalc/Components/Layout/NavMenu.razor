@@ -1,7 +1,10 @@
 ﻿
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">InsulaCalc</a>
+        <a class="navbar-brand" href="/">
+            <span class="brand-icon">▦</span>
+            InsulaCalc
+        </a>
     </div>
 </div>
 
@@ -9,10 +12,13 @@
        title="Navigation menu"
        class="navbar-toggler" />
 
-<div class="nav-scrollable"
-     onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable">
 
     <nav class="nav flex-column">
+
+        <div class="nav-section-label">
+            WORKSPACE
+        </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link"
@@ -28,7 +34,23 @@
             <NavLink class="nav-link" href="calculator">
                 <span class="bi bi-plus-square-fill-nav-menu"
                       aria-hidden="true"></span>
-                Calculator
+                Pipe Sections
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="wired-mats">
+                <span class="bi bi-grid-fill"
+                      aria-hidden="true"></span>
+                Wired Mats
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="lamella-mats">
+                <span class="bi bi-layers-fill"
+                      aria-hidden="true"></span>
+                Lamella Mats
             </NavLink>
         </div>
 
