@@ -14,14 +14,26 @@ public class ProjectService
         WriteIndented = true
     };
 
+
     public ProjectService()
-    {
-        _filePath = Path.Combine(
+        : this(Path.Combine(
             AppContext.BaseDirectory,
             "Data",
-            "projects.json"
-        );
+            "projects.json"))
+    {
+
     }
+
+    public ProjectService(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException(
+                "File path cannot be empty.",
+                nameof(filePath));
+
+        _filePath = filePath;
+    }
+
 
     private async Task<List<Project>> ReadProjectsAsync()
     {
