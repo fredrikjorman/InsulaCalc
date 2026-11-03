@@ -11,6 +11,22 @@ This project is also part of my journey as a .NET development student, where I f
 
 ---
 
+## Screenshots
+
+### Home
+
+![InsulaCalc home page](screenshots/insula-home.png.png)
+
+### Pipe Insulation Calculator
+
+![Pipe insulation calculator with calculation results](screenshots/insula-calculator.png.png)
+
+### Project Management
+
+![Project details and material summary](screenshots/insula-projects.png.png)
+
+---
+
 ## Features
 
 ### Material calculators
