@@ -1,12 +1,12 @@
 ﻿@page "/wired-mats"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @using InsulaCalc.Services
 @using InsulaCalc.Models
 @using System.Text
 @using System.Globalization
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 
 
 <PageTitle>Wired Mats Calculator</PageTitle>

@@ -1,5 +1,5 @@
 ﻿@page "/lamella-mats"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using InsulaCalc.Models
 @using InsulaCalc.Services
@@ -7,7 +7,7 @@
 @using System.Globalization
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 
 
 <PageTitle>Lamella Mats | InsulaCalc</PageTitle>

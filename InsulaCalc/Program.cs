@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<ProjectService>();
+builder.Services.AddScoped<IProjectService, DemoProjectService>();
 builder.Services.AddScoped<ProjectPdfService>();
 
 var app = builder.Build();

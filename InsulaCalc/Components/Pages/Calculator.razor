@@ -1,10 +1,10 @@
 ﻿@page "/calculator"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 @using System.Text
 @using InsulaCalc.Services
 @using InsulaCalc.Models

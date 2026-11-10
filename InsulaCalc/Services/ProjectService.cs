@@ -4,7 +4,7 @@ using InsulaCalc.Models;
 
 namespace InsulaCalc.Services;
 
-public class ProjectService
+public class ProjectService : IProjectService
 {
     private readonly string _filePath;
     private readonly SemaphoreSlim _fileLock = new(1, 1);
