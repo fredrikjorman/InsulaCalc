@@ -1,6 +1,17 @@
 # InsulaCalc
 **GitHub:** [fredrikjorman](https://github.com/fredrikjorman)
 
+## Live Demo
+
+Try InsulaCalc directly in your browser:
+
+[Launch InsulaCalc](https://insulacalc-demo-gke7g7dzfnhuftas.swedencentral-01.azurewebsites.net)
+
+Hosted on Microsoft Azure App Service.
+
+**Note:** This is a portfolio demo. Project data is stored temporarily in memory and is not persisted between sessions.
+
+
 **Technical insulation calculations, made simple.**
 
 InsulaCalc is a web application built with C# and Blazor to help calculate insulation materials, organize material lists, and manage projects in one place.
