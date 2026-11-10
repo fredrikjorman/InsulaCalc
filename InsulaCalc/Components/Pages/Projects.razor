@@ -1,9 +1,9 @@
 ﻿@page "/projects"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using InsulaCalc.Models
 @using InsulaCalc.Services
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 @inject NavigationManager Navigation
 
 <PageTitle>My Projects - InsulaCalc</PageTitle>

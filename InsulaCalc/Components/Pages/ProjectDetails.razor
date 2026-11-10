@@ -1,10 +1,10 @@
 ﻿@page "/projects/{Id:guid}"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using InsulaCalc.Models
 @using InsulaCalc.Services
 @using Microsoft.JSInterop
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 @inject ProjectPdfService ProjectPdfService
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
